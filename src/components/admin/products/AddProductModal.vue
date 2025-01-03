@@ -14,12 +14,12 @@ const { SET_PRODUCT_CHECK } = addProductStore
 
 <template>
     <div :class="{ 'visible z-[999] opacity-100': add_ProductCheck, 'invisible z-[-1] opacity-0': !add_ProductCheck }"
-        class="absolute flex justify-center items-center inset-0 duration-300 bg-[#00000080]">
+        class="fixed flex justify-center items-center inset-0 duration-300 bg-[#00000080]">
         <div :class="{ 'translate-y-0': add_ProductCheck, '-translate-y-10': !add_ProductCheck }"
             class="bg-slate-800 max-w-xl rounded-md w-full py-3 px-4 duration-300">
             <div>
                 <div class="flex justify-between border-b pb-3 mb-3 border-gray-500 items-center">
-                    <h2 class="text-white text-xl">Add Variant</h2>
+                    <h2 class="text-white text-xl">Add Product</h2>
                     <button @click="() => SET_PRODUCT_CHECK(false)">
                         <XMarkIcon class="h-6 w-6 text-white" />
                     </button>

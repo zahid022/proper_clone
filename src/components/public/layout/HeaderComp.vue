@@ -12,7 +12,7 @@ const openSide = () => {
 </script>
 
 <template>
-    <header class="sticky top-0 left-0 right-0 z-[999] px-3 bg-black md:px-8 lg:px-12">
+    <header class="sticky top-0 left-0 right-0 z-[999] bg-black px-3 md:px-8 lg:px-12">
         <div class="flex items-center min-h-[60px]">
             <div class="w-2/12 md:hidden">
                 <button @click="openSide">

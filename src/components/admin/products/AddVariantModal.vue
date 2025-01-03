@@ -15,7 +15,7 @@ const { SET_MODAL_CHECK } = addVariantStore
 
 <template>
     <div :class="{ 'visible z-[999] opacity-100': add_modalCheck, 'invisible z-[-1] opacity-0': !add_modalCheck }"
-        class="absolute flex justify-center items-center inset-0 duration-300 bg-[#00000080]">
+        class="fixed flex justify-center items-center inset-0 duration-300 bg-[#00000080]">
         <div :class="{ 'translate-y-0': add_modalCheck, '-translate-y-10': !add_modalCheck }"
             class="bg-slate-800 max-w-2xl rounded-md w-full py-3 px-4 duration-300">
             <div>

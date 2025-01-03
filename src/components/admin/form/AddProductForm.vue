@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Category, Tag, product } from '@/services/api';
+import { Category, Tag, image, product } from '@/services/api';
 import { addProduct } from '@/stores/admin/product/AddProduct';
-import type { category, productSpec, postProduct, tag } from '@/types/database.type';
+import type { category, productSpec, postProduct, tag, Image } from '@/types/database.type';
 import { XMarkIcon } from '@heroicons/vue/24/solid';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref, type Ref } from 'vue';
@@ -20,6 +20,8 @@ const description: Ref<string> = ref('')
 const detailValue: Ref<string> = ref('')
 const specKey: Ref<string> = ref('')
 const specValues: Ref<{ [key: string]: string }> = ref({});
+
+const specValueName: Ref<string> = ref('')
 
 const categoryData: Ref<category[]> = ref([])
 const tagData: Ref<tag[]> = ref([])
@@ -103,11 +105,15 @@ const handleAddSpecKey = () => {
 }
 
 const handleAddSpecValue = (key: string) => {
+
     const item = key.toLowerCase();
     const name = item.charAt(0).toUpperCase() + item.slice(1).toLowerCase();
 
     const specValue = specValues.value[item]?.toLowerCase() || '';
-    const specValueName = specValue.charAt(0).toUpperCase() + specValue.slice(1).toLowerCase();
+
+    if (!specValueName.value) {
+        specValueName.value = specValue.charAt(0).toUpperCase() + specValue.slice(1).toLowerCase();
+    }
 
     let specValueExists = false;
 
@@ -126,16 +132,17 @@ const handleAddSpecValue = (key: string) => {
             } else {
                 element.values.push({
                     key: specValue,
-                    value: specValueName
+                    value: specValueName.value
                 });
             }
+            specValueName.value = ''
             specValueExists = true;
             return;
         }
     });
 
     specValues.value[item] = ''
-    
+
     if (specValueExists) return;
 
     const obj: productSpec = {
@@ -144,11 +151,12 @@ const handleAddSpecValue = (key: string) => {
         values: [
             {
                 key: specValue,
-                value: specValueName
+                value: specValueName.value
             }
         ]
     };
     multipleSpec.value.push(obj);
+    specValueName.value = ''
 };
 
 const handleDeleteCategory = (id: string) => {
@@ -195,6 +203,27 @@ const handleAddProduct = async () => {
     multipleDetail.value = []
     multipleSpec.value = []
     multipleTag.value = []
+}
+
+const uploadValueImage = async (event : Event) => {
+    const formData = new FormData()
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+        formData.append("image", input.files[0])
+        try {
+            const result: Image | undefined = await image.uploadImage(formData)
+
+            if (result) {
+                specValueName.value = result.url
+                toast.success("Image upload is successfully")
+            }
+            else {
+                toast.error("Images upload is failed")
+            }
+        } catch {
+            return
+        }
+    }
 }
 
 onMounted(() => {
@@ -302,16 +331,52 @@ onMounted(() => {
         </div>
 
         <template v-if="specKeys.length > 0">
-            <div v-for="key in specKeys" class="mb-4" :key="key">
-                <label for="specValue">Product {{ key }} value <span class="text-red-600">*</span></label>
-                <div class="relative">
-                    <button @click="() => handleAddSpecValue(key)"
-                        class="bg-gray-500 hover:bg-gray-600 duration-300 text-gray-50 text-[14px] absolute top-0 bottom-0 right-0 rounded-ee-[4px] px-3 rounded-se-[4px]">
-                        Add
-                    </button>
-                    <input type="text" v-model="specValues[key]" id="specValue" name="specValue"
-                        :placeholder="`Product ${key} value`">
+            <div v-for="(key, index) in specKeys" class="mb-4 flex flex-wrap justify-between" :key="key">
+                <div class="w-[48%]">
+                    <label for="specValue">Product {{ key }} key <span class="text-red-600">*</span></label>
+                    <div class="relative">
+                        <input type="text" v-model="specValues[key]" id="specValue" name="specValue"
+                            :placeholder="`Product ${key} value`">
+                    </div>
                 </div>
+                <div class="w-[48%] relative">
+                    <label>Product {{ specValues[key] }} value <span class="text-red-600">*</span></label>
+                    <div class="border border-gray-50 flex justify-center items-center h-10 rounded-md">
+
+                        <template v-if="specValueName !== ''">
+                            <div class="flex justify-center">
+                                <img :src="specValueName" class="h-8 w-8 rounded-full overflow-hidden"
+                                    alt="image">
+                            </div>
+                        </template>
+
+                        <template v-else>
+                            <input @change="uploadValueImage" type="file"
+                                class="absolute opacity-0 cursor-pointer inset-0 block w-full">
+                            <p class="text-[14px] text-gray-50">Upload</p>
+                        </template>
+
+                    </div>
+                </div>
+
+                <div class="w-full pt-3">
+                    <button @click="() => handleAddSpecValue(key)"
+                        class="bg-gray-400 hover:bg-gray-600 duration-300 text-gray-900 text-[14px] font-medium py-2 rounded-md block w-full">
+                        Add {{ specValues[key] }} Spec
+                    </button>
+                </div>
+            </div>
+        </template>
+
+        <template v-if="multipleSpec.length > 0">
+            <div v-for="(item, i) in multipleSpec" class="flex items-center text-gray-50 flex-wrap gap-1 pb-2" :key="i">
+                <h2 class="font-medium">{{ item.name }} value :</h2>
+                <ul v-for="(sp, index) in item.values" class="flex gap-1 items-center" :key="index">
+                    <li>
+                        <span v-if="index !==0">,</span>
+                        {{ sp.key }}
+                    </li>
+                </ul>
             </div>
         </template>
 

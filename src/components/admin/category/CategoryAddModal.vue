@@ -12,7 +12,7 @@ const { SET_IS_MODAL_OPEN } = store
 </script>
 
 <template>
-    <div class="duration-300 absolute bg-[#00000080] inset-0 flex justify-center items-center z-[999]"
+    <div class="duration-300 fixed bg-[#00000080] inset-0 flex justify-center items-center z-[999]"
         :class="{ 'invisible opacity-0': !isModalOpen, 'visible opacity100': isModalOpen }">
         <div class="duration-300 max-w-md bg-gray-700 p-3 rounded-md relative w-full" :class="{'translate-y-0' : isModalOpen, 'translate-y-[-100%]' : !isModalOpen}">
             <div class="relative border-b pb-2">

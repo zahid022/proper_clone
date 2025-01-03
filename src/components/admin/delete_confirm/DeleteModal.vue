@@ -15,7 +15,7 @@ const confirmDelete = () => {
 </script>
 
 <template>
-    <div class="absolute inset-0 bg-[#00000080] z-[999] flex items-center justify-center duration-300"
+    <div class="fixed inset-0 bg-[#00000080] z-[999] flex items-center justify-center duration-300"
         :class="{ 'opacity-100 visible': item, 'opacity-0 invisible': !item }">
         <div :class="{ 'translate-y-0': item, 'translate-y-[-100%]': !item }"
             class="max-w-md duration-300 bg-gray-700 rounded-md px-3 w-full pt-3">

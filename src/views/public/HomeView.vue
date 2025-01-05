@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HeroSection from '@/components/public/home/HeroSection.vue';
 import SecondSection from '@/components/public/home/SecondSection.vue';
+import TagSection from '@/components/public/home/TagSection.vue';
 
 
 </script>
@@ -8,4 +9,5 @@ import SecondSection from '@/components/public/home/SecondSection.vue';
 <template>
     <HeroSection />
     <SecondSection />
+    <TagSection />
 </template>

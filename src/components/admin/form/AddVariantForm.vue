@@ -25,7 +25,7 @@ const schema = yup.object({
     discountType: yup.string().oneOf(["percentage", "value"]).default("percentage"),
     discount: yup.number().min(0, "Discount cannot be negative").default(0),
     stock: yup.number().min(0, "Stock cannot be negative").default(0),
-    image: yup.mixed().required("Image is required"),
+    image: yup.mixed().optional(),
 });
 
 const initialValues = reactive({
@@ -69,6 +69,8 @@ const removeImage = async (index: number) => {
     images.value.splice(index, 1)
 }
 
+const emit = defineEmits(["handleId"])
+
 const onsubmit: SubmissionHandler = async (values) => {
     const specs : any = {}
     
@@ -92,6 +94,7 @@ const onsubmit: SubmissionHandler = async (values) => {
     if(result){
         toast.success("Variant is added succussfully")
         SET_MODAL_CHECK(false)
+        emit('handleId')
         return
     }else{
         toast.error("Variant add is failed")
@@ -135,7 +138,7 @@ const onsubmit: SubmissionHandler = async (values) => {
                         <div class="text-white">{{ spec.name }} <span class="text-red-600">*</span> :</div>
                         <div class="flex flex-wrap items-center gap-1">
                             <div v-for="value in spec.values" class="flex radio items-center gap-1" :key="value._id">
-                                <label :for="value.key">{{ value.value }}</label>
+                                <label class="text-nowrap" :for="value.key">{{ value.key }}</label>
                                 <Field :name="spec.key" type="radio" :value="value.key"
                                     v-model="selectedValues[spec.key]" :id="value.key" />
                             </div>
@@ -145,7 +148,7 @@ const onsubmit: SubmissionHandler = async (values) => {
             </template>
 
             <div class="w-full mb-4">
-                <label for="Image">Image <span>*</span></label>
+                <label for="Image">Image</label>
                 <div class="border relative flex justify-center items-center min-h-60 rounded-md border-gray-500">
                     <Field @change="upload" name="image" id="image" class="absolute inset-0 opacity-0 cursor-pointer"
                         type="file" />

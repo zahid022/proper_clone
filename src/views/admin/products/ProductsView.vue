@@ -14,6 +14,8 @@ const data: Ref<ProductType[]> = ref([])
 const localProductId: Ref<string> = ref('')
 const deleteProductId: Ref<string> = ref('')
 
+const searchProduct: Ref<string> = ref('')
+
 const addProductStore = addProduct()
 
 const { refetch } = storeToRefs(addProductStore)
@@ -42,13 +44,17 @@ const closeDeleteModal = () => {
     isModal_open.value = false
 }
 
-const openDeleteModal = (id :string) => {
+const openDeleteModal = (id: string) => {
     deleteProductId.value = id
     isModal_open.value = true
 }
 
 const getData = async () => {
-    const result = await product.getProducts()
+    const filter = {
+        search : searchProduct.value
+    }
+
+    const result = await product.getProducts(filter)
     data.value = result.products
 }
 
@@ -65,9 +71,21 @@ const showAddVariantModal = (id: string) => {
 }
 
 const getById = async () => {
+    if (!localProductId.value) {
+        return
+    }
+
     const result: ProductType = await product.getByIdProduct(localProductId.value)
     SET_CURRENT_PRODUCT(result)
     if (result) SET_MODAL_CHECK(true)
+}
+
+const localProductIdEmpty = () => {
+    localProductId.value = ''
+}
+
+const handleInputBlur = () => {
+    getData()
 }
 
 watch(() => refetch.value, () => getData())
@@ -77,15 +95,23 @@ watch(() => localProductId.value, () => getById())
 
 <template>
     <AddProductModal />
-    <AddVariantModal />
-    <DeleteModal @confirm="deleteProduct" @closeModal="closeDeleteModal" :product-id="deleteProductId" :item="isModal_open" />
+    <AddVariantModal @handleId="localProductIdEmpty" />
+    <DeleteModal @confirm="deleteProduct" @closeModal="closeDeleteModal" :product-id="deleteProductId"
+        :item="isModal_open" />
     <main class="min-h-[91.8vh] p-5 h-full bg-gray-800">
-        <div class="relative z-[900] mb-8">
-            <button @click="() => SET_PRODUCT_CHECK(true)"
-                class="absolute top-0 right-2 bg-lime-600 text-gray-50 px-6 py-3 rounded-md">
-                Add Product
-            </button>
-            <h1 class="text-3xl mb-5 text-center text-white">All Product</h1>
+        <div class="relative flex items-center z-[900] mb-8">
+            <div class="w-4/12">
+                <input v-model="searchProduct" @keyup.enter="handleInputBlur" type="text" placeholder="Write a title"
+                    class="outline-none rounded-md py-2 px-4 bg-white block max-w-72 w-full">
+            </div>
+            <div class="w-4/12">
+                <h1 class="text-3xl mb-5 text-center text-white">All Product</h1>
+            </div>
+            <div class="w-4/12 flex justify-end">
+                <button @click="() => SET_PRODUCT_CHECK(true)" class="bg-lime-600 text-gray-50 px-6 py-3 rounded-md">
+                    Add Product
+                </button>
+            </div>
         </div>
         <table>
             <thead>
@@ -133,7 +159,8 @@ watch(() => localProductId.value, () => getById())
                                 class="bg-gray-500 px-3 py-1 rounded-md">Add
                                 Variant</button>
                             <button class="bg-lime-600 px-3 py-1 rounded-md">Edit</button>
-                            <button @click="() => openDeleteModal(product._id as string)" class="bg-red-600 px-3 py-1 rounded-md">Delete</button>
+                            <button @click="() => openDeleteModal(product._id as string)"
+                                class="bg-red-600 px-3 py-1 rounded-md">Delete</button>
                         </div>
                     </td>
                 </tr>

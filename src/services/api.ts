@@ -13,11 +13,11 @@ export class authentication {
         }
     }
 
-    static async check(token : string) {
+    static async check(token: string) {
         try {
             const response = await api.get(`/auth/check`, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -46,7 +46,7 @@ export class Category {
         }
     }
 
-    static async categoryById(id : string){
+    static async categoryById(id: string) {
         try {
             const response = await api.get(`category/${id}`)
             return response.data
@@ -55,12 +55,12 @@ export class Category {
         }
     }
 
-    static async create(obj : postCategory){
+    static async create(obj: postCategory) {
         try {
             const token = getToken()
             const response = await api.post('category', obj, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -69,12 +69,12 @@ export class Category {
         }
     }
 
-    static async update(id :string, obj : any){
+    static async update(id: string, obj: any) {
         try {
             const token = getToken()
             const response = await api.post(`category/${id}`, obj, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -83,13 +83,13 @@ export class Category {
         }
     }
 
-    static async deleteCategory(id : string){
+    static async deleteCategory(id: string) {
         try {
             const token = getToken()
 
             const response = await api.delete(`category/${id}`, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -100,7 +100,7 @@ export class Category {
 }
 
 export class Tag {
-    static async tags(){
+    static async tags() {
         try {
             const response = await api.get(`tag`)
             return response.data
@@ -109,12 +109,12 @@ export class Tag {
         }
     }
 
-    static async create(obj : postTag){
+    static async create(obj: postTag) {
         try {
             const token = getToken()
             const response = await api.post(`tag`, obj, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -123,12 +123,12 @@ export class Tag {
         }
     }
 
-    static async update(id : string, obj : postTag){
+    static async update(id: string, obj: postTag) {
         try {
             const token = getToken()
             const response = await api.post(`tag/${id}`, obj, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -137,12 +137,12 @@ export class Tag {
         }
     }
 
-    static async deleteTag(id : string){
+    static async deleteTag(id: string) {
         try {
             const token = getToken()
             const response = await api.delete(`tag/${id}`, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -153,12 +153,12 @@ export class Tag {
 }
 
 export class image {
-    static async uploadImage(data : any){
+    static async uploadImage(data: any) {
         try {
             const token = getToken()
             const response = await api.post(`/upload`, data, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -169,16 +169,25 @@ export class image {
 }
 
 export class product {
-    static async getProducts() {
+    static async getProducts(filter: any) {
         try {
-            const response = await api.get(`/product`)
-            return response.data
+
+            const params = new URLSearchParams();
+
+            for (const key in filter) {
+                if (filter[key]) {
+                    params.append(key, filter[key]);
+                }
+            }
+
+            const response = await api.get(`/product?${params.toString()}`);
+            return response.data;
         } catch (error) {
             console.error(error);
         }
     }
 
-    static async getByIdProduct(id : string){
+    static async getByIdProduct(id: string) {
         try {
             const response = await api.get(`/product/${id}`)
             return response.data
@@ -187,12 +196,12 @@ export class product {
         }
     }
 
-    static async addVariant(id : string, params : ProductVariant){
+    static async addVariant(id: string, params: ProductVariant) {
         try {
             const token = getToken()
             const response = await api.post(`/product/${id}/variant`, params, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -201,12 +210,12 @@ export class product {
         }
     }
 
-    static async addProduct(obj : postProduct){
+    static async addProduct(obj: postProduct) {
         try {
             const token = getToken()
             const response = await api.post('product', obj, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -215,12 +224,12 @@ export class product {
         }
     }
 
-    static async deleteProduct(id : string){
+    static async deleteProduct(id: string) {
         try {
             const token = getToken()
             const response = await api.delete(`product/${id}`, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data

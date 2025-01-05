@@ -4,13 +4,19 @@ import { XMarkIcon } from '@heroicons/vue/24/solid';
 import { storeToRefs } from 'pinia';
 import AddVariantForm from '../form/AddVariantForm.vue';
 
-
-
 const addVariantStore = addVariant()
 
 const { add_modalCheck } = storeToRefs(addVariantStore)
 
 const { SET_MODAL_CHECK } = addVariantStore
+
+const emit = defineEmits(['handleId'])
+
+const handleCloseModal = () => {
+    SET_MODAL_CHECK(false)
+    emit("handleId")
+} 
+
 </script>
 
 <template>
@@ -21,12 +27,12 @@ const { SET_MODAL_CHECK } = addVariantStore
             <div>
                 <div class="flex justify-between border-b pb-3 mb-3 border-gray-500 items-center">
                     <h2 class="text-white text-xl">Add Variant</h2>
-                    <button @click="() => SET_MODAL_CHECK(false)">
+                    <button @click="handleCloseModal">
                         <XMarkIcon class="h-6 w-6 text-white" />
                     </button>
                 </div>
                 <div>
-                    <AddVariantForm />
+                    <AddVariantForm @handle-id="$emit('handleId')" />
                 </div>
             </div>
         </div>

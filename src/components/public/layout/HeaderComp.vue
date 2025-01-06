@@ -7,6 +7,12 @@ import SidebarMenu from '../static/SidebarMenu.vue';
 import { sidebarMenuTrigger } from '@/stores/public/Sidebar.store';
 import { storeToRefs } from 'pinia';
 import { getUser } from '@/stores/user.store';
+import HoverCategory from '../static/HoverCategory.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
+const hover_flag : Ref<boolean> = ref(false)
 
 const categories: Ref<any> = ref([])
 
@@ -20,6 +26,10 @@ const { sidebar_flag } = storeToRefs(sidebarStore)
 
 const { SET_SIDEBAR_FLAG } = sidebarStore
 
+const toggleHover = (arg : boolean) => {
+    hover_flag.value = arg
+}
+
 const openSide = () => {
     SET_SIDEBAR_FLAG(!sidebar_flag.value)
 }
@@ -27,9 +37,18 @@ const openSide = () => {
 const getCategories = (arr: any) => {
     categories.value = arr
 }
+
+const checkAccount = () => {
+    if(user.value._id){
+        console.log("first")
+        return
+    }
+    router.push('/login')
+}
 </script>
 
 <template>
+    <HoverCategory v-show="hover_flag" @toggle-hover="toggleHover" :category-cache="categories" @get-categories="getCategories" />
     <transition name="slide-in">
         <SidebarMenu v-if="sidebar_flag" :category-cache="categories" @get-categories="getCategories" />
     </transition>
@@ -46,7 +65,7 @@ const getCategories = (arr: any) => {
                 </button>
             </div>
             <ul class="w-4/12 hidden text-white md:flex">
-                <li class="text-[#ccc] cursor-pointer font-normal font-gt-america">Shop</li>
+                <li @mouseenter="() => toggleHover(true)" @mouseleave="() => toggleHover(false)" class="text-[#ccc] min-h-[60px] flex items-center pr-2 cursor-pointer font-normal font-gt-america">Shop</li>
             </ul>
             <div class="w-8/12 md:4/12 flex justify-center">
                 <p class="text-white text-[18px] font-normal font-gt-america tracking-wider">
@@ -57,7 +76,7 @@ const getCategories = (arr: any) => {
                 <button class="hidden md:block">
                     <SearchIcon />
                 </button>
-                <button class="hidden md:block">
+                <button @click="checkAccount" class="hidden md:block">
                     <UserIcon />
                 </button>
                 <button>

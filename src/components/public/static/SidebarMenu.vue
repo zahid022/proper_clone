@@ -128,10 +128,12 @@ onMounted(() => getData())
                 <div class="absolute left-4 bottom-0 right-4 border-t border-[#333] py-4">
 
                     <template v-if="!user._id">
-                        <RouterLink to="/" class="flex gap-2 items-center">
-                            <UserBlackIcon />
-                            <p class="uppercase font-bold text-[13px]">Sign in</p>
-                        </RouterLink>
+                        <button @click="() => SET_SIDEBAR_FLAG(false)">
+                            <RouterLink to="/login" class="flex gap-2 items-center">
+                                <UserBlackIcon />
+                                <p class="uppercase font-bold text-[13px]">Sign in</p>
+                            </RouterLink>
+                        </button>
                     </template>
 
                     <template v-else>

@@ -4,6 +4,7 @@ import AdminLogin from '@/views/admin/login/AdminLogin.vue'
 import ProductsView from '@/views/admin/products/ProductsView.vue'
 import TagView from '@/views/admin/tag/TagView.vue'
 import HomeView from '@/views/public/HomeView.vue'
+import LoginView from '@/views/public/LoginView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -21,6 +22,11 @@ const router = createRouter({
           path : '/',
           name : "home",
           component : HomeView
+        },
+        {
+          path : '/login',
+          name : "login",
+          component : LoginView
         },
       ],
     },

@@ -9,67 +9,65 @@ import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 const router = useRouter()
-const toast  = useToast()
-
-const emailValue = ref('')
+const toast = useToast()
 
 const store = getUser()
 
-const {SET_TOKEN, SET_USER} = store
+const { SET_TOKEN, SET_USER } = store
 
 const schema = yup.object({
     email: yup.string().email().trim().required("Email is invalid"),
-    password: yup.string().min(8).trim().required("Password min 8 symbols")
+    password: yup.string().min(8).trim().required("Password min 8 symbols"),
+    firstName: yup.string().min(3).trim().required("Firstname is required"),
+    lastName: yup.string().min(3).trim().required("Lastname is required")
 });
 
-const password_flag : Ref<boolean> = ref(false)
+const password_flag: Ref<boolean> = ref(false)
 
 const initialValues = reactive({
     email: '',
-    password: ''
+    password: '',
+    firstName: '',
+    lastName: ''
 });
 
 const onSubmit = async (values: any) => {
-    const result = await authentication.login(values)
+    const result = await authentication.register(values)
 
-    if(!result){
-        toast.error("Email or password is wrong")
+    if (!result) {
+        toast.error("Register is failed")
         return
     }
+    console.log(result)
 
-    SET_TOKEN(result.token)
-    SET_USER(result.user)
-    localStorage.setItem("token", JSON.stringify(result.token))
-  
-    router.push('/')
-    
-}
+    router.push('/login')
 
-const forgotPassword = async () => {
-    let result = await authentication.forgot(emailValue.value)
-    
-    if(!result) {
-        toast.error("Email send is failed")
-        return
-    }
-
-    toast.success("Message send to email")
-    emailValue.value = ''
 }
 </script>
 
 <template>
     <Form @submit="onSubmit" :validation-schema="schema" :initial-values="initialValues">
         <div class="mb-6">
+            <label for="firstName">Firstname</label>
+            <Field type="text" name="firstName" id="firstName" />
+            <ErrorMessage class="error" name="firstName" />
+        </div>
+        <div class="mb-6">
+            <label for="lastName">Lastname</label>
+            <Field type="text" name="lastName" id="lastName" />
+            <ErrorMessage class="error" name="lastName" />
+        </div>
+        <div class="mb-6">
             <label for="email">E-mail</label>
-            <Field type="text" v-model="emailValue" name="email" id="email" />
+            <Field type="text" name="email" id="email" />
             <ErrorMessage class="error" name="email" />
         </div>
-        <div class="mb-3">
+        <div class="mb-6">
             <label for="password">Password</label>
             <div class="relative">
-                <Field :type="password_flag ? 'text' : 'password' " name="password" id="password" />
-                <button @click="() => password_flag = !password_flag" type="button" class="absolute right-3 top-[50%] -translate-y-[50%]">
+                <Field :type="password_flag ? 'text' : 'password'" name="password" id="password" />
+                <button @click="() => password_flag = !password_flag" type="button"
+                    class="absolute right-3 top-[50%] -translate-y-[50%]">
                     <template v-if="!password_flag">
                         <EyeIcon class="w-4 h-4 text-black" />
                     </template>
@@ -80,11 +78,6 @@ const forgotPassword = async () => {
                 </button>
             </div>
             <ErrorMessage class="error" name="password" />
-        </div>
-        <div class="mb-4 flex justify-center">
-            <button @click="forgotPassword" type="button" class="text-[#888] hover:underline text-[12px]">
-                Forgot password ?
-            </button>
         </div>
         <div>
             <button class="bg-black text-white block w-full rounded-md py-3">Sign In</button>

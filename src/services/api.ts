@@ -13,6 +13,33 @@ export class authentication {
         }
     }
 
+    static async register(obj: any) {
+        try {
+            const response = await api.post(`/auth/register`, obj)
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    static async forgot(email : string) {
+        try {
+            const response = await api.post(`/forget_password`, {email})
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    static async confirm(obj : any) {
+        try {
+            const response = await api.post(`/forget_password/confirm`, obj)
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     static async check(token: string) {
         try {
             const response = await api.get(`/auth/check`, {
@@ -24,6 +51,50 @@ export class authentication {
         } catch (error) {
             console.error(error);
         }
+    }
+
+}
+
+export class User {
+    static async update(obj : any) {
+        try {
+            const token = getToken()
+            const response = await api.post("/user/update", obj , {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
+
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    static async resetPassword(obj : any) {
+        try {
+            const token = getToken()
+            const response = await api.post("/user/password", obj , {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
+
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
+
+export class Country {
+    static async list(){
+       try {
+            const response = await api.get("/country")
+            return response.data
+       } catch (error) {
+            console.error(error);
+       } 
     }
 }
 

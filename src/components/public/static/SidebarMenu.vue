@@ -138,10 +138,12 @@ onMounted(() => getData())
 
                     <template v-else>
                         <div class="flex justify-between items-center">
-                            <RouterLink to="/" class="flex gap-2 items-center">
-                                <AccountBlackIcon />
-                                <p class="uppercase font-bold text-[13px]">Account</p>
-                            </RouterLink>
+                            <button @click="() => SET_SIDEBAR_FLAG(false)">
+                                <RouterLink to="/account" class="flex gap-2 items-center">
+                                    <AccountBlackIcon />
+                                    <p class="uppercase font-bold text-[13px]">Account</p>
+                                </RouterLink>
+                            </button>
                             <button @click="SIGN_OUT" class="text-[#888] text-[13px]">
                                 Sign out
                             </button>

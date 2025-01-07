@@ -40,7 +40,7 @@ const getCategories = (arr: any) => {
 
 const checkAccount = () => {
     if(user.value._id){
-        console.log("first")
+        router.push('/account')
         return
     }
     router.push('/login')

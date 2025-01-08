@@ -6,6 +6,7 @@ import TagView from '@/views/admin/tag/TagView.vue'
 import AccountBasics from '@/views/public/AccountBasics.vue'
 import AccountOrder from '@/views/public/AccountOrder.vue'
 import AccountView from '@/views/public/AccountView.vue'
+import DetailView from '@/views/public/DetailView.vue'
 import ForgotView from '@/views/public/ForgotView.vue'
 import HomeView from '@/views/public/HomeView.vue'
 import LoginView from '@/views/public/LoginView.vue'
@@ -37,6 +38,11 @@ const router = createRouter({
           path: '/register',
           name: "register",
           component: RegisterView
+        },
+        {
+          path: '/detail/:product_slug/:variant_slug',
+          name: "detail",
+          component: DetailView
         },
         {
           path: '/forget_password',

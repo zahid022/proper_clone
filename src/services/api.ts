@@ -267,6 +267,15 @@ export class product {
         }
     }
 
+    static async getBySlug(slug: string) {
+        try {
+            const response = await api.get(`/product/slug/${slug}`)
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     static async addVariant(id: string, params: ProductVariant) {
         try {
             const token = getToken()

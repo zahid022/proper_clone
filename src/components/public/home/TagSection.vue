@@ -49,6 +49,7 @@ const showVariants = (arr: any) => {
             const uniqueKey = `${id}-${color}`;
 
             if (!seenVariants.has(uniqueKey)) {
+                variant.product_slug = item.slug
                 SET_CHECK_VARIANTS(variant);
                 seenVariants.add(uniqueKey);
             }

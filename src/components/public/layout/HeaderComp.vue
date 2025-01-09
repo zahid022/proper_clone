@@ -2,17 +2,19 @@
 import BasketIcon from '@/static/icon/BasketIcon.vue'
 import SearchIcon from "@/static/icon/SearchIcon.vue"
 import UserIcon from '@/static/icon/UserIcon.vue';
-import { ref, type Ref } from 'vue';
+import { ref, watch, type Ref } from 'vue';
 import SidebarMenu from '../static/SidebarMenu.vue';
 import { sidebarMenuTrigger } from '@/stores/public/Sidebar.store';
 import { storeToRefs } from 'pinia';
 import { getUser } from '@/stores/user.store';
 import HoverCategory from '../static/HoverCategory.vue';
 import { useRouter } from 'vue-router';
+import { cartStore } from '@/stores/public/Cart.store'
+import { Cart } from '@/services/api'
 
 const router = useRouter()
 
-const hover_flag : Ref<boolean> = ref(false)
+const hover_flag: Ref<boolean> = ref(false)
 
 const categories: Ref<any> = ref([])
 
@@ -26,7 +28,26 @@ const { sidebar_flag } = storeToRefs(sidebarStore)
 
 const { SET_SIDEBAR_FLAG } = sidebarStore
 
-const toggleHover = (arg : boolean) => {
+const cart_store = cartStore()
+
+const { basket, refetch_basket } = storeToRefs(cart_store)
+
+const { SET_BASKET } = cart_store
+
+const checkBasket = async () => {
+    if (!user.value._id) {
+        return
+    }
+
+    let result = await Cart.list()
+    
+    if(!result){
+        return
+    }
+    SET_BASKET(result)
+}
+
+const toggleHover = (arg: boolean) => {
     hover_flag.value = arg
 }
 
@@ -39,16 +60,28 @@ const getCategories = (arr: any) => {
 }
 
 const checkAccount = () => {
-    if(user.value._id){
+    if (user.value._id) {
         router.push('/account')
         return
     }
     router.push('/login')
 }
+
+const gobasket = () => {
+    if (user.value._id) {
+        router.push("/bag")
+    } else {
+        router.push("/login")
+    }
+}
+
+watch(() => refetch_basket.value, () => checkBasket())
+watch(() => user.value, () => checkBasket())
 </script>
 
 <template>
-    <HoverCategory v-show="hover_flag" @toggle-hover="toggleHover" :category-cache="categories" @get-categories="getCategories" />
+    <HoverCategory v-show="hover_flag" @toggle-hover="toggleHover" :category-cache="categories"
+        @get-categories="getCategories" />
     <transition name="slide-in">
         <SidebarMenu v-if="sidebar_flag" :category-cache="categories" @get-categories="getCategories" />
     </transition>
@@ -65,7 +98,9 @@ const checkAccount = () => {
                 </button>
             </div>
             <ul class="w-4/12 hidden text-white md:flex">
-                <li @mouseenter="() => toggleHover(true)" @mouseleave="() => toggleHover(false)" class="text-[#ccc] min-h-[60px] flex items-center pr-2 cursor-pointer font-normal font-gt-america">Shop</li>
+                <li @mouseenter="() => toggleHover(true)" @mouseleave="() => toggleHover(false)"
+                    class="text-[#ccc] min-h-[60px] flex items-center pr-2 cursor-pointer font-normal font-gt-america">
+                    Shop</li>
             </ul>
             <div class="w-8/12 md:4/12 flex justify-center">
                 <p class="text-white text-[18px] font-normal font-gt-america tracking-wider">
@@ -79,8 +114,11 @@ const checkAccount = () => {
                 <button @click="checkAccount" class="hidden md:block">
                     <UserIcon />
                 </button>
-                <button>
+                <button @click="gobasket" class="flex items-center gap-2">
                     <BasketIcon />
+                    <span v-if="basket?.list?.length > 0" class="text-gray-50 text-sm">
+                        {{ basket.list.length }}
+                    </span>
                 </button>
             </div>
         </div>

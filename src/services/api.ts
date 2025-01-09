@@ -318,3 +318,51 @@ export class product {
         }
     }
 }
+
+export class Cart {
+    static async list() {
+        try {
+            const token = getToken()
+            let response = await api.get("/cart", {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
+            return response.data
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async update(obj: any){
+        try {
+            const token = getToken()
+
+            let response = await api.post("/cart", obj, {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
+
+            return response.data
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async deleteCart(id: any){
+        try {
+            const token = getToken()
+
+            let response = await api.delete(`/cart/${id}`, {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
+
+            return response.data
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}

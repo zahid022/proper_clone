@@ -6,6 +6,10 @@ import { useRoute, useRouter } from 'vue-router';
 import DetailSize from './DetailSize.vue';
 import AccordionQuantity from '../static/AccordionQuantity.vue';
 import { ChevronDownIcon } from '@heroicons/vue/24/solid';
+import { Cart } from '@/services/api';
+import { useToast } from 'vue-toastification';
+import { cartStore } from '@/stores/public/Cart.store';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps<{
     variant: any,
@@ -14,6 +18,8 @@ const props = defineProps<{
 
 const route = useRoute()
 const router = useRouter()
+
+const toast = useToast()
 
 const colors: Ref<any> = ref([])
 const sizes: Ref<any> = ref([])
@@ -27,6 +33,12 @@ const quantity: Ref<number> = ref(1)
 const accordionFlag = ref(false)
 
 const price = ref('')
+
+const basketStore = cartStore()
+
+const {refetch_basket} = storeToRefs(basketStore)
+
+const {SET_REFETCH_BASKET} = basketStore
 
 const getSpecs = () => {
     if (!props.product) {
@@ -83,6 +95,26 @@ const chooseCount = (index: number) => {
 
 const toggleAccordion = (arg: boolean) => {
     accordionFlag.value = arg
+}
+
+const handleAddCart = async () => {
+    let obj: any = {
+        list: {
+            productId: props.product._id,
+            variantId: props.variant._id,
+            count: quantity.value
+        }
+    }
+    
+    const result = await Cart.update(obj)
+
+    if(!result) {
+        toast.error("Product add is failed")
+        return
+    }
+
+    toast.success("Product added is successfully")
+    SET_REFETCH_BASKET(!refetch_basket.value)
 }
 
 onMounted(() => getSpecs())
@@ -150,7 +182,7 @@ watch([() => props.product, () => props.variant], () => {
 
         <div class="flex mb-6">
             <div class="w-10/12 pr-2">
-                <button class="bg-black text-white block w-full py-3 rounded">Add to Bag</button>
+                <button @click="handleAddCart" class="bg-black text-white block w-full py-3 rounded">Add to Bag</button>
             </div>
             <div class="w-2/12 pl-2">
                 <template v-if="currentVariant">

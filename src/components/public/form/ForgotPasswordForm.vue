@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { authentication } from '@/services/api';
-import { Field, Form, ErrorMessage } from 'vee-validate';
-import { reactive} from 'vue';
+import { Field, Form, ErrorMessage, type GenericObject } from 'vee-validate';
+import { reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 const router = useRouter()
 const route = useRoute()
-const toast  = useToast()
+const toast = useToast()
 
 const schema = yup.object({
     password: yup
@@ -21,19 +21,25 @@ const schema = yup.object({
         .required("Please confirm your password"),
 });
 
-const initialValues = reactive({
+export interface repeat {
+    password: string;
+    repeatPassword: string;
+    token?: string;
+}
+
+const initialValues : repeat = reactive({
     password: '',
-    repeatPassword : ''
+    repeatPassword: ''
 });
 
-const onSubmit = async (values: any) => {
-    const token = route.query.token;
-    
-    values.token = token
-    
-    let result = await authentication.confirm(values)
+const onSubmit = async (values: GenericObject) => {
+    const token = route.query.token as string;
 
-    if(!result) {
+    values.token = token
+    const obj : repeat = values as repeat
+    let result = await authentication.confirm(obj)
+
+    if (!result) {
         toast.error("Password repeat is failed")
         return
     }

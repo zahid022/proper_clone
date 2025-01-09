@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const props = defineProps<{
-    stock : any,
+    stock : number,
     flag : boolean
 }>()
 
 const emit = defineEmits(['close-accordion', 'change-quantity'])
 
-const handleChooseCount = (index : any) => {
+const handleChooseCount = (index : number) => {
     emit('close-accordion')
     emit('change-quantity', index)
 }

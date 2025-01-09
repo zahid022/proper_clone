@@ -7,15 +7,16 @@ import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from '@heroico
 import { sidebarMenuTrigger } from '@/stores/public/Sidebar.store';
 import { storeToRefs } from 'pinia';
 import { getUser } from '@/stores/user.store';
+import type { category } from '@/types/database.type';
 
 const props = defineProps<{
-    categoryCache: any
+    categoryCache: category[]
 }>()
 
 const emit = defineEmits(["get-categories"])
 
-const categories: Ref<any> = ref([]);
-const currentCategory: Ref<any> = ref(null);
+const categories: Ref<category[]> = ref([]);
+const currentCategory: Ref<category | null> = ref(null);
 
 const userStore = getUser()
 
@@ -39,7 +40,8 @@ const getData = async () => {
     emit('get-categories', result)
 };
 
-const findCategoryById: any = (list: any, id: any) => {
+const findCategoryById = (list: category[], id: string) : category | null => {
+
     for (const item of list) {
         if (item._id === id) return item;
         if (item.children) {
@@ -60,7 +62,7 @@ const goBack = () => {
     }
 };
 
-const handleCategoryClick = (category: any) => {
+const handleCategoryClick = (category: category) => {
     if (!category.children || category.children.length === 0) {
         SET_SIDEBAR_FLAG(false)
         return;
@@ -127,7 +129,7 @@ onMounted(() => getData())
 
                 <div class="absolute left-4 bottom-0 right-4 border-t border-[#333] py-4">
 
-                    <template v-if="!user._id">
+                    <template v-if="'_id' in user && !user._id">
                         <button @click="() => SET_SIDEBAR_FLAG(false)">
                             <RouterLink to="/login" class="flex gap-2 items-center">
                                 <UserBlackIcon />

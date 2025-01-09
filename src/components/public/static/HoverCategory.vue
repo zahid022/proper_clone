@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { Category } from '@/services/api';
+import type { category } from '@/types/database.type';
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref, type Ref } from 'vue';
 
 const props = defineProps<{
-    categoryCache: any
+    categoryCache: category[]
 }>()
 
-const categories: Ref<any> = ref([])
+const categories: Ref<category[]> = ref([])
 
 const emit = defineEmits(["get-categories", "toggle-hover"])
 

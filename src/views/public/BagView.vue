@@ -4,12 +4,11 @@ import { storeToRefs } from 'pinia';
 import SecureIcon from '@/static/icon/SecureIcon.vue'
 import CartItem from '@/components/public/cart/CartItem.vue'
 
-
 const basketStore = cartStore()
 
 const { basket } = storeToRefs(basketStore)
 
-function getDeliveryDateRange(startOffset : any, endOffset : any) {
+function getDeliveryDateRange(startOffset : number, endOffset : number) {
     const today = new Date();
 
     const startDate = new Date(today);
@@ -18,7 +17,7 @@ function getDeliveryDateRange(startOffset : any, endOffset : any) {
     const endDate = new Date(today);
     endDate.setDate(today.getDate() + endOffset);
 
-    const options : any = { month: "short", day: "numeric" };
+    const options : Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
     const formattedStartDate = startDate.toLocaleDateString("en-US", options);
     const formattedEndDate = endDate.toLocaleDateString("en-US", options);
 
@@ -31,7 +30,7 @@ const deliveryMessage = getDeliveryDateRange(10, 13);
 
 <template>
     <main class="min-h-[81vh] bg-[#EDEDEE]">
-        <template v-if="basket?.list?.length > 0">
+        <template v-if="basket.list.length > 0">
             <section class="md:px-8 lg:px-12 py-10">
                 <div class="flex flex-wrap">
                     <div class="flex w-full mb-4 px-3 md:px-0 justify-between items-center">
@@ -49,7 +48,14 @@ const deliveryMessage = getDeliveryDateRange(10, 13);
                             <CartItem v-for="item in basket.list" :key="item._id" :item="item" />
                         </div>
                     </div>
-                    <div></div>
+                    <div class="w-full">
+                        <div class="md:hidden">
+                            <p class="text-center text-[20px] py-8">Order Summary</p>
+                        </div>
+                        <div>
+
+                        </div>
+                    </div>
                 </div>
             </section>
         </template>

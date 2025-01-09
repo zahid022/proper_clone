@@ -10,10 +10,12 @@ import { Cart } from '@/services/api';
 import { useToast } from 'vue-toastification';
 import { cartStore } from '@/stores/public/Cart.store';
 import { storeToRefs } from 'pinia';
+import type { productSpec, ProductType, ProductVariant, specValue } from '@/types/database.type';
+import type { addCartType } from '@/types/cart.types';
 
 const props = defineProps<{
-    variant: any,
-    product: any
+    variant: ProductVariant,
+    product: ProductType
 }>()
 
 const route = useRoute()
@@ -21,12 +23,12 @@ const router = useRouter()
 
 const toast = useToast()
 
-const colors: Ref<any> = ref([])
-const sizes: Ref<any> = ref([])
-const variants: Ref<any> = ref([])
+const colors: Ref<specValue[]> = ref([])
+const sizes: Ref<specValue[]> = ref([])
+const variants: Ref<ProductVariant[]> = ref([])
 
-const currentVariant: Ref<any> = ref()
-const currentSize: Ref<any> = ref()
+const currentVariant: Ref<ProductVariant | undefined> = ref()
+const currentSize: Ref<string> = ref('')
 
 const quantity: Ref<number> = ref(1)
 
@@ -47,21 +49,26 @@ const getSpecs = () => {
 
     const variant_slug = route.params.variant_slug
 
-    const color = props.product.specs.find((item: any) => item.key === 'color')
-    const size = props.product.specs.find((item: any) => item.key === 'size')
-    const vari = props.product.variants.filter((item: any) => item.specs.color === props.variant.specs.color)
+    const color : productSpec | undefined = props.product.specs.find((item: productSpec) => item.key === 'color')
+    const size : productSpec | undefined = props.product.specs.find((item: productSpec) => item.key === 'size')
+    const vari : ProductVariant[] = props.product.variants.filter((item: ProductVariant) => item.specs.color === props.variant.specs.color)
 
-
-    const selectedVariant = vari.find((item: any) => item.slug === variant_slug)
+    const selectedVariant = vari.find((item: ProductVariant) => item.slug === variant_slug)
 
     if (!selectedVariant || !selectedVariant.specs) {
         return;
     }
-
+    
     currentSize.value = selectedVariant.specs.size
 
-    colors.value = color.values
-    sizes.value = size.values
+    if(color?.values){
+        colors.value = color?.values 
+    }
+
+    if(size?.values){ 
+        sizes.value = size.values
+    }
+
     variants.value = vari
 
     if(props.variant.discount){
@@ -78,14 +85,15 @@ const getSpecs = () => {
 const changeVariant = (index: number) => {
     let color = colors.value[index].key
 
-    let variantSlug = props.product.variants.find((item: any) => item.specs.color === color).slug
+    let variantSlug = props.product.variants.find((item: ProductVariant) => item.specs.color === color)
 
-    router.push(`/detail/${props.product.slug}/${variantSlug}`)
+    router.push(`/detail/${props.product.slug}/${variantSlug?.slug}`)
 }
 
-const checkVariant = (size: any) => {
-    let check = variants.value.find((item: any) => item.specs.size === size)
-    router.push(`/detail/${props.product.slug}/${check.slug}`)
+const checkVariant = (size: string) => {
+    let check : ProductVariant | undefined = variants.value.find((item: ProductVariant) => item.specs.size === size)
+    
+    router.push(`/detail/${props.product.slug}/${check?.slug}`)
     currentVariant.value = check
 }
 
@@ -98,10 +106,10 @@ const toggleAccordion = (arg: boolean) => {
 }
 
 const handleAddCart = async () => {
-    let obj: any = {
+    let obj: addCartType = {
         list: {
-            productId: props.product._id,
-            variantId: props.variant._id,
+            productId: props.product._id as string,
+            variantId: props.variant._id as string,
             count: quantity.value
         }
     }

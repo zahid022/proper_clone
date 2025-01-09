@@ -7,20 +7,21 @@ import { cartStore } from '@/stores/public/Cart.store';
 import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
-
+import type {cartListItem, addCartType} from '@/types/cart.types'
+import type {ProductVariant} from '@/types/database.type'
 
 const props = defineProps<{
-    item: any
+    item: cartListItem
 }>()
 
 const router = useRouter()
 
 const toast = useToast()
 
-const variant: Ref<any> = ref(null)
-const specs: Ref<any> = ref([])
+const variant: Ref<ProductVariant | null> = ref(null)
+const specs: Ref<string[]> = ref([])
 
-const quantity: Ref<any> = ref(props.item.count)
+const quantity: Ref<number> = ref(props.item.count)
 
 const basketStore = cartStore()
 
@@ -29,16 +30,17 @@ const { refetch_basket } = storeToRefs(basketStore)
 const { SET_REFETCH_BASKET } = basketStore
 
 const getVariant = () => {
-    variant.value = props.item.productId.variants.find((item: any) => item._id === props.item.variantId)
+    const foundVariant = props.item.productId.variants.find((item: ProductVariant) => item._id === props.item.variantId);
+    variant.value = foundVariant || null;
 
-    specs.value = Object.values(variant.value.specs)
+    specs.value = foundVariant ? Object.values(foundVariant.specs) : [];
 }
 
 const update = async () => {
-    let obj: any = {
+    let obj: addCartType = {
         list: {
-            productId: props.item.productId._id,
-            variantId: props.item.variantId,
+            productId: props.item.productId._id as string,
+            variantId: props.item.variantId as string,
             count: quantity.value
         }
     }
@@ -53,7 +55,7 @@ const update = async () => {
     SET_REFETCH_BASKET(!refetch_basket.value)
 }
 
-const changeQuantity = (num: any) => {
+const changeQuantity = (num: number) => {
     quantity.value = num
 }
 
@@ -69,7 +71,7 @@ const deleteItem = async () => {
     SET_REFETCH_BASKET(!refetch_basket.value)
 }
 
-const changeCount = (arg: any) => {
+const changeCount = (arg: number) => {
     if (quantity.value === 1 && arg === -1) {
         deleteItem()
         return
@@ -85,7 +87,7 @@ const closeAccordion = () => {
 }
 
 const goDetail = () => {
-    router.push(`/detail/${props.item.productId.slug}/${variant.value.slug}`)
+    router.push(`/detail/${props.item.productId.slug}/${variant.value?.slug}`)
 }
 
 onMounted(() => getVariant())
@@ -98,7 +100,7 @@ watch(() => quantity.value, () => update())
     <div class="flex py-4 border-b ">
         <template v-if="variant">
             <div class="w-2/12">
-                <img @click="goDetail" class="w-full object-cover cursor-pointer" :src="variant.images[0].url" alt="Image">
+                <img @click="goDetail" class="w-full object-cover cursor-pointer" :src="typeof variant.images[0] === 'string' ? variant.images[0] : variant.images[0].url"  alt="Image">
             </div>
             <div class="w-10/12 pl-3 flex flex-col md:flex-row justify-between">
                 <div>

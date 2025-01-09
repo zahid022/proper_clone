@@ -1,19 +1,21 @@
 <script setup lang="ts">
+import type { ProductVariant, specValue } from '@/types/database.type';
 import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
-    size: any,
-    color: any,
-    variants: any,
-    currentSize : any
+    size: specValue,
+    color: string,
+    variants: ProductVariant[],
+    currentSize : string
 }>()
+
 
 const emit = defineEmits(["check-variant"])
 
 const flag = ref(false)
 
 const getData = () => {
-    flag.value = props.variants.some((item: any) => item.specs.size === props.size.key)
+    flag.value = props.variants.some((item: ProductVariant) => item.specs.size === props.size.key)
 }
 
 const chooseVariant = () => {

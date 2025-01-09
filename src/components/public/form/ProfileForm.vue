@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Field, Form, ErrorMessage } from 'vee-validate';
+import { Field, Form, ErrorMessage, type GenericObject, type SubmissionContext } from 'vee-validate';
 import { reactive } from 'vue';
 import { useToast } from 'vue-toastification';
 import { User } from '@/services/api'
 import * as yup from 'yup';
+import type { UpdateUser } from '@/types/user.type';
 
 const toast = useToast()
 
@@ -25,8 +26,8 @@ const initialValues = reactive({
     lastName: ''
 });
 
-const onSubmit = async (values: any, { resetForm }: any) => {
-    let obj = {
+const onSubmit = async (values: GenericObject, { resetForm }: SubmissionContext) => {
+    let obj : UpdateUser = {
         firstName: values.firstName ? values.firstName : undefined,
         lastName: values.lastName ? values.lastName : undefined
     }

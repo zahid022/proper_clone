@@ -4,10 +4,11 @@ import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
 import TagCard from '@/components/public/static/TagCard.vue'
 import { tagVariant } from '@/stores/public/Tag.variant.store';
 import { storeToRefs } from 'pinia';
+import type { ProductType, ProductVariant, tag } from '@/types/database.type';
 
-const tags: Ref<any> = ref([])
+const tags: Ref<tag[]> = ref([])
 const checkedTag = ref('')
-const data: Ref<any[]> = ref([])
+const data: Ref<ProductType[]> = ref([])
 const itemsToShow = ref(10);
 
 const store = tagVariant()
@@ -21,6 +22,7 @@ const getData = async () => {
     if (!result) {
         return
     }
+    
     tags.value = result
 
     checkedTag.value = result[0]._id
@@ -37,14 +39,14 @@ const getProductData = async () => {
     showVariants(result.products)
 }
 
-const showVariants = (arr: any) => {
+const showVariants = (arr: ProductType[]) => {
     CLEAR_CHECK_VARIANTS()
     const seenVariants = new Set();
 
-    arr.forEach((item: any) => {
+    arr.forEach((item: ProductType) => {
         const id = item._id;
 
-        item.variants.forEach((variant: any) => {
+        item.variants.forEach((variant: ProductVariant) => {
             const color = variant.specs.color;
             const uniqueKey = `${id}-${color}`;
 
@@ -86,7 +88,7 @@ onUnmounted(() => {
                     <span class="text-[#666]" v-if="index !== 0">/</span>
                     <button
                         :class="{ 'text-black': checkedTag === item._id, 'text-[#999] hover:text-[#555] duration-200': checkedTag !== item._id }"
-                        @click="() => checkedTag = item._id">
+                        @click="() => checkedTag = item._id as string">
                         {{ item.name }}
                     </button>
                 </li>
@@ -95,7 +97,7 @@ onUnmounted(() => {
 
         <template v-if="checkVariants.length">
             <div class="flex flex-wrap">
-                <TagCard v-for="(item, index) in checkVariants.slice(0, itemsToShow)" :key="item.id" :item="item" />
+                <TagCard v-for="(item, index) in checkVariants.slice(0, itemsToShow)" :key="item._id" :item="item" />
             </div>
         </template>
     </section>

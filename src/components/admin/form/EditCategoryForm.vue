@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { Category } from '@/services/api'
 import { ref, type Ref } from 'vue';
+import type { updateCategoryType } from '@/types/database.type';
 
 const toast = useToast()
 
@@ -29,7 +30,7 @@ const handleEdit = async () => {
         return
     }
 
-    const obj = {
+    const obj : updateCategoryType = {
         name : categoryName.value !== '' ? categoryName.value : undefined ,
         order : categoryOrder.value !== 0 ? categoryOrder.value : undefined
     }

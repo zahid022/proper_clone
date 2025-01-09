@@ -11,12 +11,13 @@ import HoverCategory from '../static/HoverCategory.vue';
 import { useRouter } from 'vue-router';
 import { cartStore } from '@/stores/public/Cart.store'
 import { Cart } from '@/services/api'
+import type { category } from '@/types/database.type';
 
 const router = useRouter()
 
 const hover_flag: Ref<boolean> = ref(false)
 
-const categories: Ref<any> = ref([])
+const categories: Ref<category[]> = ref([])
 
 const userStore = getUser()
 
@@ -35,7 +36,7 @@ const { basket, refetch_basket } = storeToRefs(cart_store)
 const { SET_BASKET } = cart_store
 
 const checkBasket = async () => {
-    if (!user.value._id) {
+    if ('_id' in user.value && user.value._id) {
         return
     }
 
@@ -55,12 +56,12 @@ const openSide = () => {
     SET_SIDEBAR_FLAG(!sidebar_flag.value)
 }
 
-const getCategories = (arr: any) => {
+const getCategories = (arr: category[]) => {
     categories.value = arr
 }
 
 const checkAccount = () => {
-    if (user.value._id) {
+    if ('_id' in user.value && user.value._id) {
         router.push('/account')
         return
     }
@@ -68,7 +69,7 @@ const checkAccount = () => {
 }
 
 const gobasket = () => {
-    if (user.value._id) {
+    if ('_id' in user.value && user.value._id) {
         router.push("/bag")
     } else {
         router.push("/login")

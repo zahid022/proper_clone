@@ -2,11 +2,12 @@
 import { authentication } from '@/services/api';
 import { getUser } from '@/stores/user.store';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
-import { Field, Form, ErrorMessage } from 'vee-validate';
+import { Field, Form, ErrorMessage, type GenericObject } from 'vee-validate';
 import { reactive, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
+import type {register} from '@/types/auth.type'
 
 const router = useRouter()
 const toast = useToast()
@@ -31,14 +32,14 @@ const initialValues = reactive({
     lastName: ''
 });
 
-const onSubmit = async (values: any) => {
-    const result = await authentication.register(values)
+const onSubmit = async (values: GenericObject) => {
+    let obj : register = values as register
+    const result = await authentication.register(obj)
 
     if (!result) {
         toast.error("Register is failed")
         return
     }
-    console.log(result)
 
     router.push('/login')
 

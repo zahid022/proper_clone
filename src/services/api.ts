@@ -1,6 +1,9 @@
+import type { repeat } from "@/components/public/form/ForgotPasswordForm.vue";
 import api from "@/plugins/axios";
-import type { login } from "@/types/auth.type";
-import type { postCategory, postProduct, postTag, ProductVariant } from "@/types/database.type";
+import type { login, register } from "@/types/auth.type";
+import type { addCartType } from "@/types/cart.types";
+import type { postCategory, postProduct, postTag, ProductVariant, updateCategoryType } from "@/types/database.type";
+import type { forgetPasswordType, UpdateUser } from "@/types/user.type";
 import getToken from "@/utils/getToken";
 
 export class authentication {
@@ -13,7 +16,7 @@ export class authentication {
         }
     }
 
-    static async register(obj: any) {
+    static async register(obj: register) {
         try {
             const response = await api.post(`/auth/register`, obj)
             return response.data
@@ -31,7 +34,7 @@ export class authentication {
         }
     }
 
-    static async confirm(obj : any) {
+    static async confirm(obj : repeat) {
         try {
             const response = await api.post(`/forget_password/confirm`, obj)
             return response.data
@@ -56,7 +59,7 @@ export class authentication {
 }
 
 export class User {
-    static async update(obj : any) {
+    static async update(obj : UpdateUser) {
         try {
             const token = getToken()
             const response = await api.post("/user/update", obj , {
@@ -71,7 +74,7 @@ export class User {
         }
     }
 
-    static async resetPassword(obj : any) {
+    static async resetPassword(obj : forgetPasswordType) {
         try {
             const token = getToken()
             const response = await api.post("/user/password", obj , {
@@ -140,7 +143,7 @@ export class Category {
         }
     }
 
-    static async update(id: string, obj: any) {
+    static async update(id: string, obj: updateCategoryType) {
         try {
             const token = getToken()
             const response = await api.post(`category/${id}`, obj, {
@@ -224,7 +227,7 @@ export class Tag {
 }
 
 export class image {
-    static async uploadImage(data: any) {
+    static async uploadImage(data: FormData) {
         try {
             const token = getToken()
             const response = await api.post(`/upload`, data, {
@@ -334,7 +337,7 @@ export class Cart {
         }
     }
 
-    static async update(obj: any){
+    static async update(obj: addCartType){
         try {
             const token = getToken()
 
@@ -350,7 +353,7 @@ export class Cart {
         }
     }
 
-    static async deleteCart(id: any){
+    static async deleteCart(id: string){
         try {
             const token = getToken()
 

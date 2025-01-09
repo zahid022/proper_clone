@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { authentication } from '@/services/api';
 import { getUser } from '@/stores/user.store';
+import type { login } from '@/types/auth.type';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
-import { Field, Form, ErrorMessage } from 'vee-validate';
+import { Field, Form, ErrorMessage, type GenericObject } from 'vee-validate';
 import { reactive, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -24,13 +25,14 @@ const schema = yup.object({
 
 const password_flag : Ref<boolean> = ref(false)
 
-const initialValues = reactive({
+const initialValues = reactive<login>({
     email: '',
     password: ''
 });
 
-const onSubmit = async (values: any) => {
-    const result = await authentication.login(values)
+const onSubmit = async (values: GenericObject) => {
+    const loginValues = values as login;
+    const result = await authentication.login(loginValues)
 
     if(!result){
         toast.error("Email or password is wrong")

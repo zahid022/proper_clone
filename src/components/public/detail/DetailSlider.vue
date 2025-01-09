@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { Image } from '@/types/database.type';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 
 
 const props = defineProps<{
-    images: any
+    images: Image[]
 }>()
 
 const currentSlide = ref(0);

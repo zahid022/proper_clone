@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import { Field, Form, ErrorMessage } from 'vee-validate';
+import { Field, Form, ErrorMessage, type GenericObject, type SubmissionContext } from 'vee-validate';
 import { reactive, ref, type Ref } from 'vue';
 import { useToast } from 'vue-toastification';
 import { User, Country } from '@/services/api'
 import * as yup from 'yup';
+import type { UpdateUser } from '@/types/user.type';
+import type { updateProfile } from '@/types/user.type';
 
 const toast = useToast()
 
-const countries: Ref<any> = ref([])
+interface countryType {
+    country : string;
+    region : string;
+}
+
+const countries: Ref<countryType[]> = ref([])
 
 const schema = yup.object({
     addressTitle: yup
@@ -59,8 +66,8 @@ const getCountries = async () => {
     }
 }
 
-const onSubmit = async (values: any, { resetForm }: any) => {
-    let profile = {
+const onSubmit = async (values: GenericObject, { resetForm }: SubmissionContext) => {
+    let profile : updateProfile = {
         addressTitle: values.addressTitle ? values.addressTitle : undefined,
         state: values.state ? values.state : undefined,
         postalCode: values.postalCode ? values.postalCode : undefined,

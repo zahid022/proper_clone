@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Field, Form, ErrorMessage } from 'vee-validate';
+import { Field, Form, ErrorMessage, type GenericObject, type SubmissionContext } from 'vee-validate';
 import { reactive } from 'vue';
 import { useToast } from 'vue-toastification';
 import { User } from '@/services/api'
 import * as yup from 'yup';
+import type { forgetPasswordType } from '@/types/user.type';
 
 const toast = useToast()
 
@@ -19,9 +20,9 @@ const initialValues = reactive({
     repeatPassword: ''
 });
 
-const onSubmit = async (values: any, { resetForm }: any) => {
-
-    let result = await User.resetPassword(values)
+const onSubmit = async (values: GenericObject, { resetForm }: SubmissionContext) => {
+    const obj : forgetPasswordType = values as forgetPasswordType
+    let result = await User.resetPassword(obj)
 
     if (!result) {
         toast.error("Password update is failed")

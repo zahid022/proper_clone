@@ -7,7 +7,7 @@ export interface ProductType {
     details: string[];
     tags: tag[];
     specs: productSpec[];
-    variants?: ProductVariant[];
+    variants: ProductVariant[];
 }
 
 export interface postProduct {
@@ -26,6 +26,11 @@ export interface category {
     parentId: string | null;
     order: number;
     children?: category[];
+}
+
+export interface updateCategoryType {
+    name? : string;
+    order?  : number;
 }
 
 export interface postCategory {
@@ -64,8 +69,9 @@ export interface ProductVariant {
     discountType: "percentage" | "value";
     stock: number;
     slug?: string;
-    images: string[];
+    images: Image[] | string[];
     _id?: string;
+    product_slug?: string;
 }
 
 export interface Image {

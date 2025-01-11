@@ -12,6 +12,7 @@ import { useRouter } from 'vue-router';
 import { cartStore } from '@/stores/public/Cart.store'
 import { Cart } from '@/services/api'
 import type { category } from '@/types/database.type';
+import { categoryShop } from '@/stores/public/shop/Category.shop';
 
 const router = useRouter()
 
@@ -35,14 +36,18 @@ const { basket, refetch_basket } = storeToRefs(cart_store)
 
 const { SET_BASKET } = cart_store
 
+const category_shop_store = categoryShop()
+
+const { SET_SHOP_CATEGORIES } = category_shop_store
+
 const checkBasket = async () => {
-    if ('_id' in user.value && user.value._id) {
+    if ('_id' in user.value && !user.value._id) {
         return
     }
 
     let result = await Cart.list()
-    
-    if(!result){
+
+    if (!result) {
         return
     }
     SET_BASKET(result)
@@ -58,6 +63,7 @@ const openSide = () => {
 
 const getCategories = (arr: category[]) => {
     categories.value = arr
+    SET_SHOP_CATEGORIES(arr)
 }
 
 const checkAccount = () => {
@@ -101,7 +107,10 @@ watch(() => user.value, () => checkBasket())
             <ul class="w-4/12 hidden text-white md:flex">
                 <li @mouseenter="() => toggleHover(true)" @mouseleave="() => toggleHover(false)"
                     class="text-[#ccc] min-h-[60px] flex items-center pr-2 cursor-pointer font-normal font-gt-america">
-                    Shop</li>
+                    <RouterLink to="/shop">
+                        Shop
+                    </RouterLink>
+                </li>
             </ul>
             <div class="w-8/12 md:4/12 flex justify-center">
                 <p class="text-white text-[18px] font-normal font-gt-america tracking-wider">

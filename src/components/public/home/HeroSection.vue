@@ -10,7 +10,7 @@
         </picture>
         <div class="absolute left-3 bottom-6 md:bottom-10 lg:bottom-20 md:left-8 lg:left-12 z-[900]">
             <h2 class="text-[30px] md:text-[36px] font-serif text-white mb-4 tracking-wider font-normal">Fresh Fits</h2>
-            <button class="bg-white text-black rounded-[3px] text-[14px] font-medium py-[10px] px-5 uppercase tracking-wider">Shop New Arrivals</button>
+            <RouterLink to="/shop" class="bg-white text-black rounded-[3px] text-[14px] font-medium py-[10px] px-5 uppercase tracking-wider">Shop New Arrivals</RouterLink>
         </div>
     </section>
 </template>

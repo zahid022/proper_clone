@@ -14,6 +14,7 @@ const emit = defineEmits(["get-categories", "toggle-hover"])
 
 const getData = async () => {
     if (props.categoryCache.length) {
+        emit('get-categories', props.categoryCache)
         categories.value = props.categoryCache
         return
     }
@@ -41,14 +42,14 @@ onMounted(() => getData())
                 <template v-if="categories.length">
                     <div v-for="item in categories" :key="item._id" class="w-3/12 px-1 mb-4">
                         <h2 class="mb-2 font-bold text-[14px]">
-                            <RouterLink to="/">
+                            <RouterLink :to="`/shop?category=${item.slug}`">
                                 {{ item.name }}
                             </RouterLink>
                         </h2>
                         <ul>
                             <template v-if="item.children?.length">
                                 <li v-for="cat in item.children" class="py-1 text-[13px] duration-300 hover:text-[#666] hover:underline text-[#999]" :key="cat._id">
-                                    <RouterLink to="/">
+                                    <RouterLink :to="`/shop?category=${item.slug},${cat.slug}`">
                                         {{ cat.name }}
                                     </RouterLink>
                                 </li>

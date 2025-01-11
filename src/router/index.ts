@@ -12,6 +12,7 @@ import ForgotView from '@/views/public/ForgotView.vue'
 import HomeView from '@/views/public/HomeView.vue'
 import LoginView from '@/views/public/LoginView.vue'
 import RegisterView from '@/views/public/RegisterView.vue'
+import ShopView from '@/views/public/ShopView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -72,6 +73,11 @@ const router = createRouter({
               component: AccountOrder
             }
           ]
+        },
+        {
+          path: '/shop',
+          name: "shop",
+          component: ShopView
         },
       ],
     },

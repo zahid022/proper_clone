@@ -3,12 +3,12 @@ const data = [
     {
         image: "https://res.cloudinary.com/djlix30nq/image/upload/v1735901584/uploads/1735901583689-tile_dress-shirts2.jpg.jpg",
         text: "Dress Shirts",
-        path: ""
+        path: "/shop?category=shirts,dress-shirts"
     },
     {
         image: "https://res.cloudinary.com/djlix30nq/image/upload/v1735901608/uploads/1735901607560-tile_suits_fw24c.jpg.jpg",
         text: "Men's Suits",
-        path: ""
+        path: "/shop?category=suits"
     }
 ]
 </script>
@@ -16,7 +16,7 @@ const data = [
 <template>
     <section class="px-3 md:px-8 lg:px-12 py-10">
         <div class="flex flex-wrap justify-between gap-6 md:gap-0">
-            <div v-for="(item, index) in data" :key="index" class="w-full tile cursor-pointer relative md:w-[49%]">
+            <RouterLink :to="item.path" v-for="(item, index) in data" :key="index" class="w-full tile block cursor-pointer relative md:w-[49%]">
                 <figure>
                     <img :src="item.image" class="w-full h-full rounded-[4px]" alt="image">
                 </figure>
@@ -24,7 +24,7 @@ const data = [
                     <span class="text-[15px] block mb-1">Explore</span>
                     <h2 class="text-[28px] md:text-[32px] font-serif">{{ item.text }}</h2>
                 </div>
-            </div>
+            </RouterLink>
         </div>
     </section>
 </template>

@@ -72,6 +72,7 @@ export interface ProductVariant {
     images: Image[] | string[];
     _id?: string;
     product_slug?: string;
+    product_name? : string;
 }
 
 export interface Image {

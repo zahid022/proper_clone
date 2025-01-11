@@ -77,6 +77,11 @@ const changeCount = (arg: number) => {
         return
     }
 
+    if(arg === 1 && quantity.value === variant.value?.stock){
+        toast.error("Stock out")
+        return
+    }
+
     quantity.value += arg
 }
 
@@ -123,7 +128,7 @@ watch(() => quantity.value, () => update())
                         </template>
                     </p>
                 </div>
-                <div class="hidden md:block md:w-3/12">
+                <div class="hidden md:block md:w-3/12 lg:w-2/12">
                     <div class="flex flex-wrap justify-between">
                         <button @click="() => changeCount(-1)" 
                             class="rounded-ss rounded-es hover:opacity-100 duration-300 bg-black text-[1.45rem] text-white opacity-[.25] py-[0.1rem] w-[49%]">-</button>

@@ -13,10 +13,13 @@ import { cartStore } from '@/stores/public/Cart.store'
 import { Cart } from '@/services/api'
 import type { category } from '@/types/database.type';
 import { categoryShop } from '@/stores/public/shop/Category.shop';
+import SearchDesktop from '../static/SearchDesktop.vue';
 
 const router = useRouter()
 
 const hover_flag: Ref<boolean> = ref(false)
+
+const search_flag: Ref<boolean> = ref(false)
 
 const categories: Ref<category[]> = ref([])
 
@@ -41,16 +44,18 @@ const category_shop_store = categoryShop()
 const { SET_SHOP_CATEGORIES } = category_shop_store
 
 const checkBasket = async () => {
-    if ('_id' in user.value && !user.value._id) {
-        return
-    }
+    if ('_id' in user.value && user.value._id) {
+        let result = await Cart.list()
 
-    let result = await Cart.list()
-
-    if (!result) {
-        return
+        if (!result) {
+            return
+        }
+        SET_BASKET(result)
     }
-    SET_BASKET(result)
+}
+
+const setSearchFlag = (arg: boolean) => {
+    search_flag.value = arg
 }
 
 const toggleHover = (arg: boolean) => {
@@ -92,6 +97,9 @@ watch(() => user.value, () => checkBasket())
     <transition name="slide-in">
         <SidebarMenu v-if="sidebar_flag" :category-cache="categories" @get-categories="getCategories" />
     </transition>
+    <transition name="search-in">
+        <SearchDesktop v-if="search_flag" :flag="search_flag" @set-search-flag="setSearchFlag" />
+    </transition>
     <header class="sticky top-0 left-0 right-0 z-[999] bg-black px-3 md:px-8 lg:px-12">
         <div class="flex items-center min-h-[60px]">
             <div class="w-2/12 md:hidden">
@@ -118,7 +126,7 @@ watch(() => user.value, () => checkBasket())
                 </p>
             </div>
             <div class="w-2/12 md:w-4/12 flex items-center md:gap-6 lg:gap-8 justify-end">
-                <button class="hidden md:block">
+                <button @click="() => setSearchFlag(!search_flag)" class="hidden md:block">
                     <SearchIcon />
                 </button>
                 <button @click="checkAccount" class="hidden md:block">
@@ -155,5 +163,26 @@ watch(() => user.value, () => checkBasket())
 
 .slide-in-leave-to {
     transform: translateX(-300%);
+}
+
+.search-in-enter-active,
+.search-in-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.search-in-enter-from {
+    opacity: 0;
+}
+
+.search-in-enter-to {
+    opacity: 1;
+}
+
+.search-in-leave-from {
+    opacity: 1;
+}
+
+.search-in-leave-to {
+    opacity: 0;
 }
 </style>

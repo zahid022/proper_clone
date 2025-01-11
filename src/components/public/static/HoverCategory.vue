@@ -3,10 +3,15 @@ import { Category } from '@/services/api';
 import type { category } from '@/types/database.type';
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref, type Ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     categoryCache: category[]
 }>()
+
+const router = useRouter()
+
+const value: Ref<string> = ref('')
 
 const categories: Ref<category[]> = ref([])
 
@@ -25,18 +30,35 @@ const getData = async () => {
     emit('get-categories', result)
 };
 
+const handleSearch = () => {
+    if(value.value.length === 0){
+        return
+    }
+
+    router.push({
+        path: '/shop',
+        query: {
+            q: value.value
+        }
+    })
+
+    emit('toggle-hover', false)
+}
+
 onMounted(() => getData())
 
 </script>
 
 <template>
-    <div @mouseenter="() => $emit('toggle-hover', true)" @mouseleave="() => $emit('toggle-hover', false)" class="fixed hidden top-[60px] left-0 right-0 h-[80vh] bg-[#e2e2e2] md:flex z-[999]">
+    <div @mouseenter="() => $emit('toggle-hover', true)" @mouseleave="() => $emit('toggle-hover', false)"
+        class="fixed hidden top-[60px] left-0 right-0 h-[80vh] bg-[#e2e2e2] md:flex z-[999]">
         <div class="w-full hv:w-9/12 bg-white p-[42px]">
             <div class="relative">
                 <span class="absolute top-[50%] -translate-y-[50%] right-5">
                     <MagnifyingGlassIcon class="w-5 h-5 text-black" />
                 </span>
-                <input type="text" placeholder="Search Product" class="py-3 px-5 block text-[14px] w-full rounded-md bg-[#f0f0f0] mb-4">
+                <input v-model="value" @keyup.enter="handleSearch" type="text" placeholder="Search Product"
+                    class="py-3 px-5 block text-[14px] w-full rounded-md bg-[#f0f0f0] mb-4">
             </div>
             <div class="flex flex-wrap">
                 <template v-if="categories.length">
@@ -48,7 +70,9 @@ onMounted(() => getData())
                         </h2>
                         <ul>
                             <template v-if="item.children?.length">
-                                <li v-for="cat in item.children" class="py-1 text-[13px] duration-300 hover:text-[#666] hover:underline text-[#999]" :key="cat._id">
+                                <li v-for="cat in item.children"
+                                    class="py-1 text-[13px] duration-300 hover:text-[#666] hover:underline text-[#999]"
+                                    :key="cat._id">
                                     <RouterLink :to="`/shop?category=${item.slug},${cat.slug}`">
                                         {{ cat.name }}
                                     </RouterLink>
@@ -62,14 +86,17 @@ onMounted(() => getData())
         <div class="hidden hv:block hv:w-3/12 p-[42px]">
             <div class="flex flex-col h-full xl:justify-between">
                 <div class="mb-10 hidden xl:block">
-                    <img :src="'https://res.cloudinary.com/djlix30nq/image/upload/v1736158702/uploads/1736158701745-nav-new-fa24e.jpg.jpg'" class="w-full object-cover rounded-md" alt="image">
+                    <img :src="'https://res.cloudinary.com/djlix30nq/image/upload/v1736158702/uploads/1736158701745-nav-new-fa24e.jpg.jpg'"
+                        class="w-full object-cover rounded-md" alt="image">
                 </div>
                 <div class="flex hv:flex-col xl:flex-row xl:items-center hv:justify-between hv:h-full">
                     <div class="xl:w-6/12 xl:pr-2 h-[49%] xl:h-auto  overflow-hidden">
-                        <img :src="'https://res.cloudinary.com/djlix30nq/image/upload/v1736158799/uploads/1736158798510-nav-biz-shirt-sp24b.jpg.jpg'" class="w-full h-full object-cover rounded-md" alt="image">
+                        <img :src="'https://res.cloudinary.com/djlix30nq/image/upload/v1736158799/uploads/1736158798510-nav-biz-shirt-sp24b.jpg.jpg'"
+                            class="w-full h-full object-cover rounded-md" alt="image">
                     </div>
                     <div class="xl:w-6/12 xl:pl-2 h-[49%] xl:h-auto overflow-hidden">
-                        <img :src="'https://res.cloudinary.com/djlix30nq/image/upload/v1736158848/uploads/1736158847860-nav-cards-w24a.jpg.jpg'" class="w-full h-full object-cover rounded-md" alt="image">
+                        <img :src="'https://res.cloudinary.com/djlix30nq/image/upload/v1736158848/uploads/1736158847860-nav-cards-w24a.jpg.jpg'"
+                            class="w-full h-full object-cover rounded-md" alt="image">
                     </div>
                 </div>
             </div>

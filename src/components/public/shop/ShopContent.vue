@@ -19,15 +19,16 @@ const variants: Ref<ProductVariant[]> = ref([])
 
 const page: Ref<number> = ref(1)
 const limit: Ref<number> = ref(10)
-const total : Ref<number> = ref(0)
-const totalPages : Ref<number> = ref(1)
+const total: Ref<number> = ref(0)
+const totalPages: Ref<number> = ref(1)
 
 const selectedCategories: Ref<string[]> = ref([])
 
 const emit = defineEmits(['set-is-loading'])
-    
+
 const getSelectedCategories = () => {
     page.value = 1
+
     if (!route.query.category) {
         selectedCategories.value = []
         return
@@ -55,28 +56,39 @@ const removeUrl = (arg: string, index: number) => {
 
 const getProducts = async () => {
     emit('set-is-loading', true)
+    let response = null
 
-    const result = await Category.categories()
-
-    if (!result) {
-        return
-    }
-
-    const filterCategories: string[] = []
-
-    result.forEach((item: category) => {
-        if (selectedCategories.value.includes(item.slug)) {
-            filterCategories.push(item._id as string)
+    if (route.query.q) {
+        let obj = {
+            search: route.query.q,
+            limit: limit.value,
+            page: page.value
         }
-    })
-    let requestCategoryURL = filterCategories.join(",")
-    let obj = {
-        categories: requestCategoryURL,
-        limit : limit.value,
-        page : page.value
-    }
+        response = await product.getProducts(obj)
+    } else {
+        const result = await Category.categories()
 
-    let response = await product.getProducts(obj)
+        if (!result) {
+            return
+        }
+
+        const filterCategories: string[] = []
+
+        result.forEach((item: category) => {
+            if (selectedCategories.value.includes(item.slug)) {
+                filterCategories.push(item._id as string)
+            }
+        })
+
+        let requestCategoryURL = filterCategories.join(",")
+        let obj = {
+            categories: requestCategoryURL,
+            limit: limit.value,
+            page: page.value
+        }
+
+        response = await product.getProducts(obj)
+    }
 
     if (!response) {
         return
@@ -88,7 +100,7 @@ const getProducts = async () => {
 
     total.value = response.total
     products.value = response.products
-    
+
     totalPages.value = Math.ceil(total.value / limit.value);
     const seenVariants = new Set();
 
@@ -111,7 +123,7 @@ const getProducts = async () => {
     emit("set-is-loading", false)
 }
 
-const setPage = (arg : number) => {
+const setPage = (arg: number) => {
     page.value = arg
 }
 
@@ -165,7 +177,8 @@ watch(() => route.query, () => { getSelectedCategories(), getProducts() })
                 <div class="flex flex-wrap">
                     <template v-if="products.length > 0">
                         <ShopCard v-for="item in variants" :key="item._id" :flag="filter_flag" :item="item" />
-                        <ShopPagination :total="total" @set-page="setPage" :total-pages="totalPages" :limit="limit" :page="page" />
+                        <ShopPagination :total="total" @set-page="setPage" :total-pages="totalPages" :limit="limit"
+                            :page="page" />
                     </template>
                 </div>
             </div>

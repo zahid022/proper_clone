@@ -45,7 +45,6 @@ const changeSlug = (slug: string) => {
     router.push({
         path: route.path,
         query: {
-            ...route.query,
             category: categoryArray.length ? categoryArray.join(',') : undefined,
         },
     });

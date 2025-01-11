@@ -8,12 +8,16 @@ import { sidebarMenuTrigger } from '@/stores/public/Sidebar.store';
 import { storeToRefs } from 'pinia';
 import { getUser } from '@/stores/user.store';
 import type { category } from '@/types/database.type';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     categoryCache: category[]
 }>()
 
 const emit = defineEmits(["get-categories"])
+
+const value: Ref<string> = ref('')
+const router = useRouter()
 
 const categories: Ref<category[]> = ref([]);
 const currentCategory: Ref<category | null> = ref(null);
@@ -40,7 +44,7 @@ const getData = async () => {
     emit('get-categories', result)
 };
 
-const findCategoryById = (list: category[], id: string) : category | null => {
+const findCategoryById = (list: category[], id: string): category | null => {
 
     for (const item of list) {
         if (item._id === id) return item;
@@ -71,6 +75,21 @@ const handleCategoryClick = (category: category) => {
     currentCategory.value = category;
 };
 
+const handleSearch = () => {
+    if(value.value.length === 0){
+        return
+    }
+
+    router.push({
+        path: '/shop',
+        query: {
+            q: value.value
+        }
+    })
+
+    SET_SIDEBAR_FLAG(false)
+}
+
 onMounted(() => getData())
 </script>
 
@@ -86,10 +105,10 @@ onMounted(() => getData())
 
             <template v-if="!currentCategory">
                 <div class="relative mb-4">
-                    <span class="absolute top-[50%] -translate-y-[50%] right-3">
+                    <button @click="handleSearch" class="absolute top-[50%] -translate-y-[50%] right-3">
                         <MagnifyingGlassIcon class="w-4 h-4 text-black" />
-                    </span>
-                    <input type="text" class="block w-full py-[13px] text-sm px-3 rounded-[4px] bg-[#f0f0f0]"
+                    </button>
+                    <input v-model="value" type="text" class="block w-full py-[13px] text-sm px-3 rounded-[4px] bg-[#f0f0f0]"
                         placeholder="Search product" />
                 </div>
             </template>
@@ -129,16 +148,7 @@ onMounted(() => getData())
 
                 <div class="absolute left-4 bottom-0 right-4 border-t border-[#333] py-4">
 
-                    <template v-if="'_id' in user && !user._id">
-                        <button @click="() => SET_SIDEBAR_FLAG(false)">
-                            <RouterLink to="/login" class="flex gap-2 items-center">
-                                <UserBlackIcon />
-                                <p class="uppercase font-bold text-[13px]">Sign in</p>
-                            </RouterLink>
-                        </button>
-                    </template>
-
-                    <template v-else>
+                    <template v-if="'_id' in user && user._id">
                         <div class="flex justify-between items-center">
                             <button @click="() => SET_SIDEBAR_FLAG(false)">
                                 <RouterLink to="/account" class="flex gap-2 items-center">
@@ -150,6 +160,15 @@ onMounted(() => getData())
                                 Sign out
                             </button>
                         </div>
+                    </template>
+
+                    <template v-else>
+                        <button @click="() => SET_SIDEBAR_FLAG(false)">
+                            <RouterLink to="/login" class="flex gap-2 items-center">
+                                <UserBlackIcon />
+                                <p class="uppercase font-bold text-[13px]">Sign in</p>
+                            </RouterLink>
+                        </button>
                     </template>
 
                 </div>

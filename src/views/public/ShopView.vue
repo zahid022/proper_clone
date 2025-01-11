@@ -18,6 +18,11 @@ const shop_store = categoryShop()
 const { shopCategories } = storeToRefs(shop_store)
 
 const getCategoryName = () => {
+    if(route.query.q){
+        categoryName.value = `'${route.query.q as string}'`
+        return
+    }
+
     if(!route.query.category){
         categoryName.value = 'Clothing & Accessories'
         return

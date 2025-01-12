@@ -49,7 +49,7 @@ const onSubmit = async (values: GenericObject, { resetForm }: SubmissionContext)
 
 <template>
     <Form @submit="onSubmit" :validation-schema="schema" class="py-5 md:border-b md:border-[#ddd]" :initial-values="initialValues">
-        <div class="md:flex md:justify-between md:items-center">
+        <div class="md:flex md:gap-4 md:items-center">
             <div class="mb-6 md:w-5/12">
                 <label for="firstName">Firstname</label>
                 <Field type="text" name="firstName" id="firstName" />
@@ -87,7 +87,7 @@ input {
     font-size: 14px;
     margin-bottom: -6px;
     width: 100%;
-    border: 1px solid #00000020;
+    border: 1px solid #999;
 }
 
 .error {

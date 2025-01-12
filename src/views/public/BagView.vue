@@ -59,9 +59,12 @@ const deliveryMessage = getDeliveryDateRange(10, 13);
                                 <div class="border-b pb-3">
                                     <ul v-if="basket.totalPrice">
                                         <li class="flex justify-between mb-2 items-center">
-                                            <span class="text-[14px] text-[#757575]">Subtotal</span>
-                                            <span class="text-[14px] text-[#757575]">${{ basket.totalPrice -
-                                                basket.totalDiscount }}</span>
+                                            <span class="text-[14px] text-[#757575]">Price</span>
+                                            <span class="text-[14px] text-[#757575]">${{ basket.totalPrice}}</span>
+                                        </li>
+                                        <li class="flex justify-between mb-2 items-center">
+                                            <span class="text-[14px] text-[#757575]">Discount</span>
+                                            <span class="text-[14px] text-[#757575]">${{ basket.totalDiscount}}</span>
                                         </li>
                                         <li class="flex justify-between mb-2 items-center">
                                             <span class="text-[14px] text-[#757575]">Shipping</span>

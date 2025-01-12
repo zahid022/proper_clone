@@ -25,7 +25,7 @@ const totalPages: Ref<number> = ref(1)
 const selectedCategories: Ref<string[]> = ref([])
 
 const props = defineProps<{
-    sidebar_flag : boolean;
+    sidebar_flag: boolean;
 }>()
 const emit = defineEmits(['set-is-loading', 'set-sidebar-flag'])
 
@@ -146,7 +146,7 @@ const toggle = () => {
 const hideProp = () => {
     const width = window.innerWidth
 
-    if(width <= 850){
+    if (width <= 850) {
         filter_flag.value = !props.sidebar_flag
     }
 }
@@ -171,7 +171,7 @@ watch(() => route.query, () => { getSelectedCategories(), getProducts() })
         </div>
 
         <template v-if="selectedCategories.length > 0">
-            <div class="flex gap-2 pt-6">
+            <div class="gap-2 hidden md:flex pt-6">
                 <div class="flex items-center gap-1 py-1 px-3 rounded-full border-2 border-black"
                     v-for="(item, index) in selectedCategories">
                     <span>
@@ -197,6 +197,18 @@ watch(() => route.query, () => { getSelectedCategories(), getProducts() })
                         <ShopCard v-for="item in variants" :key="item._id" :flag="filter_flag" :item="item" />
                         <ShopPagination :total="total" @set-page="setPage" :total-pages="totalPages" :limit="limit"
                             :page="page" />
+                    </template>
+                    <template v-else>
+                        <div class="flex justify-center w-full">
+                            <div class="flex flex-col items-center justify-center">
+                                <p class="text-[#757575] text-lg mb-4">No items match your current selection</p>
+                                <div class="flex gap-3 items-center">
+                                    <RouterLink class="underline text-sm text-[#757575] hover:text-black" to="/shop">Clear All Filters</RouterLink>
+                                    <span class="text-[13px]">or</span>
+                                    <RouterLink class="underline text-sm text-[#757575] hover:text-black" to="/shop">Shop All Garments</RouterLink>
+                                </div>
+                            </div>
+                        </div>
                     </template>
                 </div>
             </div>

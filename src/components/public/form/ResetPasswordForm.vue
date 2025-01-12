@@ -83,7 +83,7 @@ input {
     font-size: 14px;
     margin-bottom: -6px;
     width: 100%;
-    border: 1px solid #00000020;
+    border: 1px solid #999;
 }
 
 .error {

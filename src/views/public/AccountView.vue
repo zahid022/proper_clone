@@ -1,4 +1,20 @@
 <script setup lang="ts">
+import { getUser } from '@/stores/user.store';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
+const store = getUser()
+
+const { SIGN_OUT } = store
+
+const handleSignOut = () => {
+    SIGN_OUT()
+
+    router.push({
+        path : '/'
+    })
+}
 
 </script>
 
@@ -12,6 +28,9 @@
                     </li>
                     <li class="text-[#757575] hover:underline">
                         <RouterLink to="/account/orders">Orders</RouterLink>
+                    </li>
+                    <li class="text-[#757575] hidden md:block">
+                        <button @click="handleSignOut" class="hover:underline">Sign Out</button>
                     </li>
                 </ul>
                 <div class="w-full md:w-9/12">

@@ -51,6 +51,12 @@ const checkBasket = async () => {
             return
         }
         SET_BASKET(result)
+    } else {
+        SET_BASKET({
+            list: [],
+            totalDiscount: 0,
+            totalPrice: 0,
+        })
     }
 }
 

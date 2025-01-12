@@ -30,5 +30,8 @@ onMounted(() => getData())
                 <OrderGroup v-for="order in orders" :key="order._id" :item="order" />
             </div>
         </template>
+        <template v-else>
+            <p class="text-[#757575] text-sm mb-4">Your order is empty. <RouterLink to="/shop" class="underline hover:text-black">Back to Shop</RouterLink></p>
+        </template>
     </div>
 </template>

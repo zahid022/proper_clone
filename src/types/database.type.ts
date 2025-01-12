@@ -106,3 +106,16 @@ export interface getOrderList {
     variant : ProductVariant;
     _id : string;
 }
+
+export interface PostCommentType {
+    productId : string;
+    content : string;
+}
+
+export interface GetCommentType extends PostCommentType {
+    userId : {
+        firstName : string;
+        lastName : string;
+    }
+    _id : string
+}

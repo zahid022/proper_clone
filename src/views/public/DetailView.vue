@@ -5,6 +5,8 @@ import { useRoute } from 'vue-router';
 import DetailSlider from '@/components/public/detail/DetailSlider.vue'
 import DetailVariant from '@/components/public/detail/DetailVariant.vue';
 import { type Image, type ProductType, type ProductVariant } from '@/types/database.type';
+import DetailComment from '@/components/public/detail/DetailComment.vue';
+import ShopLoading from '@/components/public/static/ShopLoading.vue';
 
 const route = useRoute()
 
@@ -48,10 +50,20 @@ watch(() => route.params, () => getProduct())
                     </div>
 
                     <div class="w-full md:w-5/12">
-                        <DetailVariant :product="productDetail as ProductType" :variant="variant" />
+                        <DetailVariant :product="(productDetail as ProductType)" :variant="variant" />
+                    </div>
+
+                    <div class="w-full pt-8">
+                        <DetailComment :product-id="(productDetail?._id as string)" />
                     </div>
                 </div>
             </section>
+        </template>
+
+        <template v-else>
+            <div class="min-h-[81vh]">
+                <ShopLoading :flag="true" />
+            </div>
         </template>
 
     </main>

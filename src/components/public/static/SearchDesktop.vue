@@ -44,16 +44,16 @@ const handleSearch = () => {
             <div class="md:px-8 md:w-3/12 lg:px-12 py-10 bg-[#E2E2E2]">
                 <p class="font-medium text-[14px]">Trending</p>
                 <ul class="flex flex-wrap gap-1">
-                    <li class="text-[#777] text-[13px] underline">
+                    <li @click="() => $emit('set-search-flag', false)" class="text-[#777] text-[13px] underline">
                         <RouterLink to="/shop?category=shirts">Shirts,</RouterLink>
                     </li>
-                    <li class="text-[#777] text-[13px] underline">
+                    <li @click="() => $emit('set-search-flag', false)" class="text-[#777] text-[13px] underline">
                         <RouterLink to="/shop?category=suits">Suits,</RouterLink>
                     </li>
-                    <li class="text-[#777] text-[13px] underline">
+                    <li @click="() => $emit('set-search-flag', false)" class="text-[#777] text-[13px] underline">
                         <RouterLink to="/shop?category=pants">Pants,</RouterLink>
                     </li>
-                    <li class="text-[#777] text-[13px] underline">
+                    <li @click="() => $emit('set-search-flag', false)" class="text-[#777] text-[13px] underline">
                         <RouterLink to="/shop?category=sweaters">Sweaters</RouterLink>
                     </li>
                 </ul>

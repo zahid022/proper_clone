@@ -2,7 +2,7 @@ import type { repeat } from "@/components/public/form/ForgotPasswordForm.vue";
 import api from "@/plugins/axios";
 import type { login, register } from "@/types/auth.type";
 import type { addCartType } from "@/types/cart.types";
-import type { createOrder, postCategory, postProduct, postTag, ProductVariant, updateCategoryType } from "@/types/database.type";
+import type { createOrder, postCategory, PostCommentType, postProduct, postTag, ProductVariant, updateCategoryType } from "@/types/database.type";
 import type { forgetPasswordType, UpdateUser } from "@/types/user.type";
 import getToken from "@/utils/getToken";
 
@@ -25,16 +25,16 @@ export class authentication {
         }
     }
 
-    static async forgot(email : string) {
+    static async forgot(email: string) {
         try {
-            const response = await api.post(`/forget_password`, {email})
+            const response = await api.post(`/forget_password`, { email })
             return response.data
         } catch (error) {
             console.error(error);
         }
     }
 
-    static async confirm(obj : repeat) {
+    static async confirm(obj: repeat) {
         try {
             const response = await api.post(`/forget_password/confirm`, obj)
             return response.data
@@ -59,12 +59,12 @@ export class authentication {
 }
 
 export class User {
-    static async update(obj : UpdateUser) {
+    static async update(obj: UpdateUser) {
         try {
             const token = getToken()
-            const response = await api.post("/user/update", obj , {
-                headers : {
-                    Authorization : `Bearer ${token}`
+            const response = await api.post("/user/update", obj, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
 
@@ -74,12 +74,12 @@ export class User {
         }
     }
 
-    static async resetPassword(obj : forgetPasswordType) {
+    static async resetPassword(obj: forgetPasswordType) {
         try {
             const token = getToken()
-            const response = await api.post("/user/password", obj , {
-                headers : {
-                    Authorization : `Bearer ${token}`
+            const response = await api.post("/user/password", obj, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
 
@@ -91,13 +91,13 @@ export class User {
 }
 
 export class Country {
-    static async list(){
-       try {
+    static async list() {
+        try {
             const response = await api.get("/country")
             return response.data
-       } catch (error) {
+        } catch (error) {
             console.error(error);
-       } 
+        }
     }
 }
 
@@ -327,8 +327,8 @@ export class Cart {
         try {
             const token = getToken()
             let response = await api.get("/cart", {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -337,13 +337,13 @@ export class Cart {
         }
     }
 
-    static async update(obj: addCartType){
+    static async update(obj: addCartType) {
         try {
             const token = getToken()
 
             let response = await api.post("/cart", obj, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
 
@@ -353,13 +353,13 @@ export class Cart {
         }
     }
 
-    static async deleteCart(id: string){
+    static async deleteCart(id: string) {
         try {
             const token = getToken()
 
             let response = await api.delete(`/cart/${id}`, {
-                headers : {
-                    Authorization : `Bearer ${token}`
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
 
@@ -374,9 +374,9 @@ export class Order {
     static async list() {
         try {
             const token = getToken()
-            let response = await api.get("/order" ,{
-                headers : {
-                    Authorization : `Bearer ${token}`
+            let response = await api.get("/order", {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data
@@ -384,12 +384,36 @@ export class Order {
             console.error(err);
         }
     }
-    static async create(obj : createOrder) {
+    static async create(obj: createOrder) {
         try {
             const token = getToken()
-            let response = await api.post("/order", obj ,{
-                headers : {
-                    Authorization : `Bearer ${token}`
+            let response = await api.post("/order", obj, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            return response.data
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}
+
+export class CommentApi {
+    static async list(id: string, page: number = 1) {
+        try {
+            let response = await api.get(`/comment/${id}?page=${page}`)
+            return response.data
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    static async create(obj: PostCommentType) {
+        try {
+            const token = getToken()
+            let response = await api.post("/comment", obj, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             return response.data

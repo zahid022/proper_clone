@@ -24,7 +24,10 @@ const totalPages: Ref<number> = ref(1)
 
 const selectedCategories: Ref<string[]> = ref([])
 
-const emit = defineEmits(['set-is-loading'])
+const props = defineProps<{
+    sidebar_flag : boolean;
+}>()
+const emit = defineEmits(['set-is-loading', 'set-sidebar-flag'])
 
 const getSelectedCategories = () => {
     page.value = 1
@@ -133,7 +136,22 @@ const { shopCategories } = storeToRefs(shop_store)
 
 const filter_flag: Ref<boolean> = ref(false)
 
-onMounted(() => { getSelectedCategories(), getProducts() })
+const toggle = () => {
+    filter_flag.value = !filter_flag.value
+    emit('set-sidebar-flag', true)
+
+    hideProp()
+}
+
+const hideProp = () => {
+    const width = window.innerWidth
+
+    if(width <= 850){
+        filter_flag.value = !props.sidebar_flag
+    }
+}
+
+onMounted(() => { getSelectedCategories(), getProducts(), hideProp() })
 
 watch(() => page.value, () => getProducts())
 watch(() => route.query, () => { getSelectedCategories(), getProducts() })
@@ -144,7 +162,7 @@ watch(() => route.query, () => { getSelectedCategories(), getProducts() })
     <section class="px-3 md:px-8 lg:px-12 relative py-4 md:py-10">
         <div
             class="flex pb-3 border-b sticky bg-white top-[60px] pt-3 left-0 right-0 z-[900] md:justify-end border-[#00000033]">
-            <button @click="() => filter_flag = !filter_flag" class="flex items-center gap-2">
+            <button @click="toggle" class="flex items-center gap-2">
                 <FilterIcon />
                 <p>
                     <span v-if="!filter_flag">Hide</span> Filters

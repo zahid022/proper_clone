@@ -66,9 +66,26 @@ const goBack = () => {
     }
 };
 
+const buildCategoryPath = (category: category | null): string => {
+    if (!category) return '';
+    const parentCategory = findCategoryById(categories.value, category.parentId as string);
+    return parentCategory
+        ? `${buildCategoryPath(parentCategory)},${category.slug}` 
+        : category.slug;
+};
+
 const handleCategoryClick = (category: category) => {
     if (!category.children || category.children.length === 0) {
-        SET_SIDEBAR_FLAG(false)
+        const categoryPath = buildCategoryPath(category); 
+
+        SET_SIDEBAR_FLAG(false); 
+        router.push({
+            path: '/shop',
+            query: {
+                category: categoryPath,
+            },
+        });
+
         return;
     }
 

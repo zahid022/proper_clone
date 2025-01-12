@@ -89,3 +89,20 @@ export interface orderList {
     variantId: string;
     count: number;
 }
+
+export interface getOrders {
+    createdAt : string;
+    totalDiscount : number;
+    totalPrice : number;
+    userId : string;
+    list : getOrderList[];
+    _id : string;
+}
+
+export interface getOrderList {
+    count : number;
+    price : number;
+    product : ProductType;
+    variant : ProductVariant;
+    _id : string;
+}

@@ -371,6 +371,19 @@ export class Cart {
 }
 
 export class Order {
+    static async list() {
+        try {
+            const token = getToken()
+            let response = await api.get("/order" ,{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
+            return response.data
+        } catch (err) {
+            console.error(err);
+        }
+    }
     static async create(obj : createOrder) {
         try {
             const token = getToken()

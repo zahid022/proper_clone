@@ -3,10 +3,21 @@ import { cartStore } from '@/stores/public/Cart.store';
 import { storeToRefs } from 'pinia';
 import SecureIcon from '@/static/icon/SecureIcon.vue'
 import CartItem from '@/components/public/cart/CartItem.vue'
+import type {createOrder, orderList} from '@/types/database.type'
+import type { cartListItem } from '@/types/cart.types';
+import {Order} from '@/services/api'
+import { useToast } from 'vue-toastification';
+import { useRouter } from 'vue-router';
+
+const toast = useToast()
+
+const router = useRouter()
 
 const basketStore = cartStore()
 
-const { basket } = storeToRefs(basketStore)
+const { basket , refetch_basket} = storeToRefs(basketStore)
+
+const {SET_REFETCH_BASKET} = basketStore
 
 function getDeliveryDateRange(startOffset: number, endOffset: number) {
     const today = new Date();
@@ -26,11 +37,43 @@ function getDeliveryDateRange(startOffset: number, endOffset: number) {
 
 const deliveryMessage = getDeliveryDateRange(10, 13);
 
+const checkOut = async () => {
+
+    let list : orderList[] = []
+
+    basket.value.list.forEach((item : cartListItem)  => {
+        list.push({
+            count : item.count,
+            productId : item.productId._id as string,
+            variantId : item.variantId as string
+        })
+    })
+
+    const obj : createOrder = {
+        list
+    }
+
+    let response = await Order.create(obj)
+
+    if(!response){
+        toast.error("Insufficent balance")
+        return
+    }
+
+    toast.success("Order completed is successfully")
+
+    router.push({
+        path : '/account/orders'
+    })
+
+    SET_REFETCH_BASKET(!refetch_basket.value)
+}
+
 </script>
 
 <template>
     <main class="min-h-[81vh] bg-[#EDEDEE]">
-        <template v-if="basket.list.length > 0">
+        <template v-if="basket.list && basket.list.length > 0">
             <section class="md:px-8 lg:px-12 py-10">
                 <div class="flex flex-wrap relative">
                     <div class="flex w-full mb-4 px-3 md:px-0 justify-between items-center">
@@ -79,6 +122,7 @@ const deliveryMessage = getDeliveryDateRange(10, 13);
                                 </div>
                                 <div class="pt-4">
                                     <button
+                                        @click="checkOut"
                                         class="py-[1rem] block w-full font-medium uppercase px-[2.5rem] bg-black text-white rounded">
                                         Secure Checkout →
                                     </button>
@@ -92,7 +136,10 @@ const deliveryMessage = getDeliveryDateRange(10, 13);
 
         <template v-else>
             <div class="min-h-[81vh] flex items-center justify-center">
-                test
+                <div class="flex flex-col items-center justify-center">
+                    <p class="text-[#757575] text-lg mb-4">Your shopping bag is empty.</p>
+                    <RouterLink to="/shop" class="bg-black text-white text-sm font-medium rounded px-6 py-3">BACK TO SHOP</RouterLink>
+                </div>
             </div>
         </template>
     </main>

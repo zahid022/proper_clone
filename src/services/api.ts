@@ -2,7 +2,7 @@ import type { repeat } from "@/components/public/form/ForgotPasswordForm.vue";
 import api from "@/plugins/axios";
 import type { login, register } from "@/types/auth.type";
 import type { addCartType } from "@/types/cart.types";
-import type { postCategory, postProduct, postTag, ProductVariant, updateCategoryType } from "@/types/database.type";
+import type { createOrder, postCategory, postProduct, postTag, ProductVariant, updateCategoryType } from "@/types/database.type";
 import type { forgetPasswordType, UpdateUser } from "@/types/user.type";
 import getToken from "@/utils/getToken";
 
@@ -363,6 +363,22 @@ export class Cart {
                 }
             })
 
+            return response.data
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}
+
+export class Order {
+    static async create(obj : createOrder) {
+        try {
+            const token = getToken()
+            let response = await api.post("/order", obj ,{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
             return response.data
         } catch (err) {
             console.error(err);

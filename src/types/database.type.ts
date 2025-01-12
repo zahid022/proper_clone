@@ -29,8 +29,8 @@ export interface category {
 }
 
 export interface updateCategoryType {
-    name? : string;
-    order?  : number;
+    name?: string;
+    order?: number;
 }
 
 export interface postCategory {
@@ -72,10 +72,20 @@ export interface ProductVariant {
     images: Image[] | string[];
     _id?: string;
     product_slug?: string;
-    product_name? : string;
+    product_name?: string;
 }
 
 export interface Image {
     _id: string;
     url: string;
+}
+
+export interface createOrder {
+    list : orderList[]
+}
+
+export interface orderList {
+    productId: string;
+    variantId: string;
+    count: number;
 }

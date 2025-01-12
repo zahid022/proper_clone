@@ -80,7 +80,7 @@ onMounted(() => getComments())
 
 <template>
     <div class="flex flex-wrap justify-between items-start relative" id="comment-container">
-        <div :class="{ 'w-full items-end': !readAll, 'md:w-[49%] w-full mb-6 sticky top-[84px]': readAll }"
+        <div :class="{ 'w-full items-end': !readAll, 'md:w-[49%] w-full mb-6 md:sticky md:top-[84px]': readAll }"
             class="flex flex-wrap md:gap-5">
             <div :class="{ 'md:!w-9/12': readAll }" class="w-9/12 pr-2 md:w-6/12 lg:w-4/12">
                 <input v-model="content" type="text" placeholder="Write a Comment..."
@@ -126,7 +126,7 @@ onMounted(() => getComments())
                         }}</span>
                 </div>
                 <div v-if="load_more_flag">
-                    <button @click="handleLoadMore" class="text-sm text-[#757575] underline hover:block">Load More Reviews</button>
+                    <button @click="handleLoadMore" class="text-sm text-[#757575] underline hover:text-black">Load More Reviews</button>
                 </div>
             </div>
         </template>

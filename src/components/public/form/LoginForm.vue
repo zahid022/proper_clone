@@ -51,7 +51,7 @@ const forgotPassword = async () => {
     let result = await authentication.forgot(emailValue.value)
     
     if(!result) {
-        toast.error("Email send is failed")
+        toast.error("Email is required")
         return
     }
 

@@ -32,7 +32,10 @@ const initialValues = reactive({
     lastName: ''
 });
 
+const registerFlag = ref(false)
+
 const onSubmit = async (values: GenericObject) => {
+    registerFlag.value = true
     let obj : register = values as register
     const result = await authentication.register(obj)
 
@@ -40,7 +43,7 @@ const onSubmit = async (values: GenericObject) => {
         toast.error("Register is failed")
         return
     }
-
+    registerFlag.value = false
     router.push('/login')
 
 }
@@ -81,7 +84,7 @@ const onSubmit = async (values: GenericObject) => {
             <ErrorMessage class="error" name="password" />
         </div>
         <div>
-            <button class="bg-black text-white block w-full rounded-md py-3">Sign In</button>
+            <button :disabled="registerFlag" class="bg-black text-white block w-full rounded-md py-3">Sign In</button>
         </div>
     </Form>
 </template>

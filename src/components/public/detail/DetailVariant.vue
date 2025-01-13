@@ -12,6 +12,7 @@ import { cartStore } from '@/stores/public/Cart.store';
 import { storeToRefs } from 'pinia';
 import type { productSpec, ProductType, ProductVariant, specValue } from '@/types/database.type';
 import type { addCartType } from '@/types/cart.types';
+import getToken from '@/utils/getToken';
 
 const props = defineProps<{
     variant: ProductVariant,
@@ -106,6 +107,15 @@ const toggleAccordion = (arg: boolean) => {
 }
 
 const handleAddCart = async () => {
+    const token = getToken()
+
+    if(!token){
+        router.push({
+            path : '/login'
+        })
+        return
+    }
+
     let obj: addCartType = {
         list: {
             productId: props.product._id as string,

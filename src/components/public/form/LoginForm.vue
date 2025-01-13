@@ -30,7 +30,10 @@ const initialValues = reactive<login>({
     password: ''
 });
 
+const loginFlag = ref(false)
+
 const onSubmit = async (values: GenericObject) => {
+    loginFlag.value = true
     const loginValues = values as login;
     const result = await authentication.login(loginValues)
 
@@ -42,12 +45,17 @@ const onSubmit = async (values: GenericObject) => {
     SET_TOKEN(result.token)
     SET_USER(result.user)
     localStorage.setItem("token", JSON.stringify(result.token))
+    loginFlag.value = true
   
     router.push('/')
     
 }
 
+const forgotFlag = ref(false)
+
 const forgotPassword = async () => {
+    forgotFlag.value = true
+
     let result = await authentication.forgot(emailValue.value)
     
     if(!result) {
@@ -56,6 +64,7 @@ const forgotPassword = async () => {
     }
 
     toast.success("Message send to email")
+    forgotFlag.value = false
     emailValue.value = ''
 }
 </script>
@@ -84,12 +93,12 @@ const forgotPassword = async () => {
             <ErrorMessage class="error" name="password" />
         </div>
         <div class="mb-4 flex justify-center">
-            <button @click="forgotPassword" type="button" class="text-[#888] hover:underline text-[12px]">
+            <button :disabled="forgotFlag" @click="forgotPassword" type="button" class="text-[#888] hover:underline text-[12px]">
                 Forgot password ?
             </button>
         </div>
         <div>
-            <button class="bg-black text-white block w-full rounded-md py-3">Sign In</button>
+            <button :disabled="loginFlag" class="bg-black text-white block w-full rounded-md py-3">Sign In</button>
         </div>
     </Form>
 </template>

@@ -2,8 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/detail/:product_slug/:variant_slug",
-      "destination": "/index.html"
+      "src": "/detail/.+",
+      "dest": "/index.html"
     },
     {
       "source": "/(.*)",

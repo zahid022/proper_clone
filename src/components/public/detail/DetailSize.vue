@@ -32,7 +32,7 @@ watch(() => props.variants, () => getData())
     <button :disabled="!flag"
         :class="{' bg-gray-100 !border-gray-300  cursor-not-allowed' : !flag, '!bg-black !text-white' : size.key === props.currentSize}"
         @click="chooseVariant"
-        class="flex items-center uppercase justify-center border border-[#888] w-11 h-11 p-[3px] cursor-pointer rounded">
+        class="flex items-center uppercase justify-center border border-[#888] min-w-11 h-11 p-[3px] cursor-pointer rounded">
         {{ size.value }}
         
     </button>

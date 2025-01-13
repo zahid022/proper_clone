@@ -106,8 +106,17 @@ const toggleAccordion = (arg: boolean) => {
     accordionFlag.value = arg
 }
 
+const addFlagDisabled = ref(false)
+
 const handleAddCart = async () => {
+    addFlagDisabled.value = true
     const token = getToken()
+    
+    if(props.variant.stock < quantity.value){
+        toast.error("Stock is out")
+        addFlagDisabled.value = false
+        return
+    }
 
     if(!token){
         router.push({
@@ -132,6 +141,7 @@ const handleAddCart = async () => {
     }
 
     toast.success("Product added is successfully")
+    addFlagDisabled.value = false
     SET_REFETCH_BASKET(!refetch_basket.value)
 }
 
@@ -200,7 +210,7 @@ watch([() => props.product, () => props.variant], () => {
 
         <div class="flex mb-6">
             <div class="w-10/12 pr-2">
-                <button @click="handleAddCart" class="bg-black text-white block w-full py-3 rounded">Add to Bag</button>
+                <button :disabled="addFlagDisabled" @click="handleAddCart" class="bg-black text-white block w-full py-3 rounded">Add to Bag</button>
             </div>
             <div class="w-2/12 pl-2">
                 <template v-if="currentVariant">

@@ -2,10 +2,6 @@
   "version": 2,
   "rewrites": [
     {
-      "src": "/detail/.+",
-      "dest": "/index.html"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

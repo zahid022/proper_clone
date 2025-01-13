@@ -125,7 +125,7 @@ onMounted(() => getData())
                     <button @click="handleSearch" class="absolute top-[50%] -translate-y-[50%] right-3">
                         <MagnifyingGlassIcon class="w-4 h-4 text-black" />
                     </button>
-                    <input v-model="value" type="text" class="block w-full py-[13px] text-sm px-3 rounded-[4px] bg-[#f0f0f0]"
+                    <input @keyup.enter="handleSearch" v-model="value" type="text" class="block w-full py-[13px] text-sm px-3 rounded-[4px] bg-[#f0f0f0]"
                         placeholder="Search product" />
                 </div>
             </template>

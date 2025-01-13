@@ -131,7 +131,7 @@ onMounted(() => getComments())
             </div>
         </template>
 
-        <template v-if="!readAll">
+        <template v-if="comments.length && comments.length > 0 && !readAll">
             <button @click="() => readAll = true" class="underline hover:text-black text-[14px] text-[#757575] pt-5">
                 Read All Reviews
             </button>

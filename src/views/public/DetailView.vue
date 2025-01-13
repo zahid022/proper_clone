@@ -54,6 +54,7 @@ watch(() => route.params, () => getProduct())
                     </div>
 
                     <div class="w-full pt-8">
+                        <h2 class="mb-3 italic font-serif text-[20px] md:text-[24px] md:pl-6">Comments</h2>
                         <DetailComment :product-id="(productDetail?._id as string)" />
                     </div>
                 </div>
